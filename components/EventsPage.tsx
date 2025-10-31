@@ -3,8 +3,8 @@ import { Page, NavigateFunction } from '../App';
 
 const events = [
     {
-        month: 'SEP',
-        day: '05',
+        month: 'NOV',
+        day: '03',
         type: 'COMMUNITY',
         title: 'AI Office Hours',
         time: '7:00 PM - 9:00 PM EST',
