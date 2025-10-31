@@ -12,6 +12,7 @@ const events = [
         description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
         buttonText: 'RSVP Today',
         typeColor: 'text-[#0bceff]',
+        url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
     },
     {
         month: 'NOV',
@@ -23,6 +24,7 @@ const events = [
         description: 'Explore, build, and collaborate with us as we embark on another adventure at AI Exploration Labs.',
         buttonText: 'Register Now',
         typeColor: 'text-blue-600',
+        url: 'https://luma.com/calendar/cal-ZJoLn2kvSHHzV7u',
     },
     {
         month: 'NOV',
@@ -34,6 +36,7 @@ const events = [
         description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
         buttonText: 'RSVP Today',
         typeColor: 'text-[#0bceff]',
+        url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
     },
 ];
 
