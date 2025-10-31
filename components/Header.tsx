@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
     }, [isMobileMenuOpen]);
 
     const navLinks: { name: Page }[] = [
-        { name: 'Homepage' },
+        { name: 'Home' },
         { name: 'About' },
         { name: 'Programs' },
         { name: 'Events' },
@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
             <header className="absolute top-0 left-0 right-0 z-30">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <nav className="flex items-center justify-between py-6">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Home'); }} className={`text-[2.3rem] font-logo font-semibold ${currentPage === 'About' ? 'text-[#00d9ff]' : 'text-white'}`}>
+                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Home'); }} className={`text-[2.3rem] font-logo font-semibold ${currentPage === 'About' ? 'text-text-heading-light' : 'text-white'}`}>
                             WeCreate
                         </a>
                         <div className="hidden md:flex items-center space-x-8">
@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                                         currentPage === link.name
                                             ? 'text-[#00d9ff] font-bold'
                                             : currentPage === 'About'
-                                                ? 'text-black hover:text-[#00d9ff] hover:font-bold'
+                                                ? 'text-text-heading-light hover:text-[#00d9ff] hover:font-bold'
                                                 : 'text-white hover:text-[#00d9ff] hover:font-bold'
                                     }`}
                                 >
