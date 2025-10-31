@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
     }, [isMobileMenuOpen]);
 
     const navLinks: { name: Page }[] = [
-        { name: 'Home' },
+        { name: 'Homes' },
         { name: 'About' },
         { name: 'Programs' },
         { name: 'Events' },
