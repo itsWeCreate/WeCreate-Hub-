@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeCreate - Building the Future of Work, Together</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lato:wght@400;700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+        :root {
+            --light-purple: #E9D5FF;
+            --mid-purple: #C084FC;
+            --dark-purple: #9333EA;
+            --light-blue: #BFDBFE;
+            --mid-blue: #60A5FA;
+            --dark-blue: #3B82F6;
+            --bg-light: #F8FAFC;
+            --bg-dark: #1E293B;
+            --text-heading-light: #1E293B;
+            --text-body-light: #475569;
+            --text-heading-dark: #F1F5F9;
+            --text-body-dark: #CBD5E1;
+            --card-bg-light: #FFFFFF;
+            --card-bg-dark: #334155;
+            --border-light: #E2E8F0;
+            --border-dark: #475569;
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            color: var(--text-body-light);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-heading-light);
+            font-weight: 600;
+        }
+        .hero-gradient {
+            background-image: linear-gradient(to bottom right, var(--mid-blue) 30%, var(--dark-purple));
+        }
+        .gradient-bg-section {
+             background-image: linear-gradient(to bottom right, var(--dark-blue) 30%, var(--dark-purple));
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "var(--dark-purple)",
+                        "primary-hover": "#A855F7",
+                        "primary-light": "var(--light-purple)",
+                        secondary: "var(--dark-blue)",
+                        "secondary-light": "var(--light-blue)",
+                        "background-light": "var(--bg-light)",
+                        "background-dark": "var(--bg-dark)",
+                        "text-heading-light": "var(--text-heading-light)",
+                        "text-body-light": "var(--text-body-light)",
+                        "text-heading-dark": "var(--text-heading-dark)",
+                        "text-body-dark": "var(--text-body-dark)",
+                        "card-bg-light": "var(--card-bg-light)",
+                        "card-bg-dark": "var(--card-bg-dark)",
+                        "border-light": "var(--border-light)",
+                        "border-dark": "var(--border-dark)",
+                    },
+                    fontFamily: {
+                        heading: ['Poppins', 'sans-serif'],
+                        body: ['Lato', 'sans-serif'],
+                        logo: ['Fredoka', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        lg: "1.5rem",
+                        xl: "2rem",
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 30px rgba(147, 51, 234, 0.1)',
+                        'mild': '0 5px 15px rgba(147, 51, 234, 0.1)'
+                    }
+                }
+            }
+        };
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-background-light font-body text-text-body-light antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
