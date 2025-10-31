@@ -27,12 +27,12 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # If you don't have a lockfile, keep npm install.
+      # If you add package-lock.json, you can switch to `npm ci`.
       - name: Install deps
-        run: npm ci
+        run: npm install
 
       - name: Build
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run build
 
       - name: Upload artifact
