@@ -42,10 +42,9 @@ const events = [
 
 interface EventCardProps {
     event: typeof events[0];
-    onRegister: (title: string) => void;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
+const EventCard: React.FC<EventCardProps> = ({ event }) => {
     return (
         <div className="bg-card-bg-light p-6 sm:p-8 rounded-xl shadow-soft border border-border-light flex flex-col sm:flex-row items-start gap-6 sm:gap-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <div className="flex-shrink-0 text-center">
@@ -68,7 +67,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
                     </div>
                 </div>
                 <p className="text-text-body-light font-body mb-6">{event.description}</p>
-                <a href="#" onClick={(e) => { e.preventDefault(); onRegister(event.title); }} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-mild inline-flex items-center gap-2">
+                <a href={event.url} target="_blank" rel="noopener noreferrer" className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-mild inline-flex items-center gap-2">
                     {event.buttonText}
                     <span className="material-symbols-outlined">arrow_forward</span>
                 </a>
@@ -82,10 +81,6 @@ interface EventsPageProps {
 }
 
 const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
-
-    const handleRegister = (title: string) => {
-        alert(`Thank you for your interest in "${title}"! A confirmation has been sent to your email.`);
-    };
 
     return (
         <div className="bg-background-light">
@@ -110,7 +105,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                             </h2>
                             <div className="space-y-8">
                                 {events.map((event, index) => (
-                                    <EventCard key={index} event={event} onRegister={handleRegister} />
+                                    <EventCard key={index} event={event} />
                                 ))}
                             </div>
                         </div>
