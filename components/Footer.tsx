@@ -38,11 +38,11 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                             </li>
                             <li className="flex items-start">
                                 <span className="material-symbols-outlined text-[#0bceff] mt-1">mail</span>
-                                <span className="ml-2 text-text-body-light font-body">hello@wecreatehub.com</span>
+                                <span className="ml-2 text-text-body-light font-body">info@wecreatehub.com</span>
                             </li>
                              <li className="flex items-start">
                                 <span className="material-symbols-outlined text-[#0bceff] mt-1">call</span>
-                                <span className="ml-2 text-text-body-light font-body">(305) 555-0123</span>
+                                <span className="ml-2 text-text-body-light font-body">(315) 570-9317</span>
                             </li>
                         </ul>
                     </div>
