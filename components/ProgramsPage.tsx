@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import { Page, NavigateFunction, OpenModalFunction } from '../App';
+import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 interface ProgramsPageProps {
     onNavigate: NavigateFunction;
     onOpenPartnershipModal: OpenModalFunction;
+    onSuccess: (message: string) => void;
 }
 
 const ProgramCardLarge: React.FC<{
@@ -85,11 +86,13 @@ const ProgramCardSmall: React.FC<{
 };
 
 
-const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnershipModal }) => {
+const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnershipModal, onSuccess }) => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProgram, setSelectedProgram] = useState('');
     const [notificationFormData, setNotificationFormData] = useState({ name: '', email: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const openNotificationModal = (programName: string) => {
         setSelectedProgram(programName);
@@ -114,10 +117,64 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnersh
         setNotificationFormData(prev => ({ ...prev, [name]: value }));
     };
     
-    const handleNotificationSubmit = (e: React.FormEvent) => {
+    const saveNotificationToLocalStorage = (data: typeof notificationFormData, program: string) => {
+        try {
+            const stored = localStorage.getItem('programNotifications');
+            const existing = stored ? JSON.parse(stored) : [];
+            const newEntry = {
+                id: Date.now(),
+                submittedAt: new Date().toISOString(),
+                fullName: data.name,
+                email: data.email,
+                programInterested: program
+            };
+            existing.push(newEntry);
+            localStorage.setItem('programNotifications', JSON.stringify(existing));
+        } catch (error) {
+            console.error("Failed to save notification to localStorage:", error);
+        }
+    };
+
+    const handleNotificationSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Thank you, ${notificationFormData.name}! We will notify you at ${notificationFormData.email} when "${selectedProgram}" becomes available.`);
-        closeModal();
+        setIsSubmitting(true);
+        
+        const submissionData = {
+            fullName: notificationFormData.name,
+            email: notificationFormData.email,
+            programInterested: selectedProgram,
+            formType: 'programNotification'
+        };
+    
+        try {
+            if (!GOOGLE_SHEET_WEB_APP_URL) {
+                console.warn('Google Sheets URL is not configured. Saving to localStorage only.');
+                saveNotificationToLocalStorage(notificationFormData, selectedProgram);
+                onSuccess('Your interest has been saved. Please configure Google Sheets to enable full functionality.');
+            } else {
+                const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(submissionData),
+                });
+                const result = await response.json();
+                if (result.result !== 'success') {
+                    throw new Error(result.error || 'The API returned an unknown error.');
+                }
+                onSuccess(`Thank you! We'll notify you about the "${selectedProgram}" program.`);
+            }
+            
+            saveNotificationToLocalStorage(notificationFormData, selectedProgram);
+            closeModal();
+    
+        } catch (error) {
+            console.error("An error occurred during form submission:", error);
+            saveNotificationToLocalStorage(notificationFormData, selectedProgram);
+            onSuccess("Your interest was saved, but we couldn't send it. Please contact us directly.");
+            closeModal();
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -220,7 +277,7 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnersh
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 transition-opacity duration-300" aria-modal="true" role="dialog">
                     <div className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full relative transform transition-all duration-300 scale-100">
-                        <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close modal">
+                        <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close modal" disabled={isSubmitting}>
                             <span className="material-symbols-outlined">close</span>
                         </button>
                         <h2 className="text-2xl font-heading font-semibold text-text-heading-light">Get Notified!</h2>
@@ -237,7 +294,8 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnersh
                                     value={notificationFormData.name}
                                     onChange={handleNotificationChange}
                                     required 
-                                    className="w-full px-4 py-2 border border-border-light rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition" 
+                                    disabled={isSubmitting}
+                                    className="w-full px-4 py-2 border border-border-light rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition disabled:bg-slate-100" 
                                     placeholder="Jane Doe"
                                 />
                             </div>
@@ -250,12 +308,21 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnersh
                                     value={notificationFormData.email}
                                     onChange={handleNotificationChange} 
                                     required 
-                                    className="w-full px-4 py-2 border border-border-light rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition" 
+                                    disabled={isSubmitting}
+                                    className="w-full px-4 py-2 border border-border-light rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition disabled:bg-slate-100" 
                                     placeholder="jane.doe@example.com"
                                 />
                             </div>
-                            <button type="submit" className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-mild">
-                                Notify Me
+                            <button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-mild disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center">
+                                {isSubmitting ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Submitting...
+                                    </>
+                                ) : 'Notify Me'}
                             </button>
                         </form>
                     </div>

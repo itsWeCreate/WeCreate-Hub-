@@ -49,10 +49,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     <div>
                         <h3 className="font-heading font-semibold text-text-heading-light">Follow Us</h3>
                         <div className="flex mt-4 space-x-4">
-                            <a href="#" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
+                            <a href="https://www.linkedin.com/company/wecreate-enterprises" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
                                 <LinkedInIcon />
                             </a>
-                            <a href="#" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
+                            <a href="https://www.instagram.com/hello_wecreate/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
                                 <InstagramIcon />
                             </a>
                         </div>
