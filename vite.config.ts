@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => {
     base: '/',   // Updated for custom domain
     server: { port: 3000, host: '0.0.0.0' },
     plugins: [react()],
-    // FIX: `__dirname` is not available in ES modules. Use `.` to resolve from the current working directory.
-    resolve: { alias: { '@': path.resolve('.') } }
+    resolve: { alias: { '@': path.resolve(__dirname, '.') } }
   }
 })
