@@ -148,18 +148,6 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                 </div>
             </section>
 
-            {/* Meet the Team Section */}
-            <section className="py-24">
-                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">Meet the Team</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-lg text-text-body-light">The passionate educators, builders, and visionaries dedicated to your success.</p>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-                        <TeamMember imgSrc="https://avatar.iran.liara.run/public/boy?username=Jeffrey" name="Jeffrey Clarke" title="Co-Founder & CEO" />
-                        <TeamMember imgSrc="https://avatar.iran.liara.run/public/girl?username=Justine" name="Justine Clarke" title="Co-Founder & Head of Curriculum" />
-                        <TeamMember imgSrc="https://avatar.iran.liara.run/public/boy?username=Ethnie" name="Ethnie Ferguson" title="Lead AI Instructor" />
-                    </div>
-                </div>
-            </section>
 
             {/* Join Our Community CTA */}
             <section className="gradient-bg-section text-white">
