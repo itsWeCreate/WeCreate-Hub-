@@ -97,7 +97,7 @@ const App: React.FC = () => {
             case 'About':
                 return <AboutPage onNavigate={handleNavigate} />;
             case 'Programs':
-                return <ProgramsPage onNavigate={handleNavigate} {...modalProps} />;
+                return <ProgramsPage onNavigate={handleNavigate} {...modalProps} onSuccess={showToast} />;
             case 'Events':
                 return <EventsPage onNavigate={handleNavigate} {...modalProps} />;
             case 'Partnership':
