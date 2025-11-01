@@ -1,10 +1,11 @@
+
 import React from 'react';
-import { Page, NavigateFunction } from '../App';
+import { Page, NavigateFunction, OpenModalFunction } from '../App';
 
 const events = [
     {
         month: 'NOV',
-        day: '03',
+        day: '3',
         type: 'COMMUNITY',
         title: 'AI Office Hours',
         time: '7:00 PM - 9:00 PM EST',
@@ -78,9 +79,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
 interface EventsPageProps {
     onNavigate: NavigateFunction;
+    onOpenPartnershipModal: OpenModalFunction;
 }
 
-const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
+const EventsPage: React.FC<EventsPageProps> = ({ onNavigate, onOpenPartnershipModal }) => {
 
     return (
         <div className="bg-background-light">
@@ -119,7 +121,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                             We're always looking for community partners to host workshops and events. If you're an expert in your field and passionate about sharing your knowledge, we'd love to hear from you.
                         </p>
                         <div className="mt-8">
-                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Partnership', '#contact-form'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                            <a href="#" onClick={(e) => { e.preventDefault(); onOpenPartnershipModal(); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                                 Partner With Us
                             </a>
                         </div>

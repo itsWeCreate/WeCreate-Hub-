@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Page, NavigateFunction } from '../App';
+import React from 'react';
+import { Page, NavigateFunction, OpenModalFunction } from '../App';
 import { CheckIcon } from './icons';
 
 const CollaborationCard: React.FC<{
@@ -48,37 +48,10 @@ const BenefitItem: React.FC<{
 
 interface PartnershipPageProps {
     onNavigate: NavigateFunction;
+    onOpenPartnershipModal: OpenModalFunction;
 }
 
-const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate }) => {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        organization: '',
-        email: '',
-        phone: '',
-        partnershipType: 'Corporate Partnership',
-        message: ''
-    });
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Form submitted:', formData);
-        alert('Thank you for your inquiry! We will get back to you soon.');
-        setFormData({
-            fullName: '',
-            organization: '',
-            email: '',
-            phone: '',
-            partnershipType: 'Corporate Partnership',
-            message: ''
-        });
-    };
-
+const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate, onOpenPartnershipModal }) => {
     return (
         <div className="bg-background-light">
             {/* Hero Section */}
@@ -93,7 +66,7 @@ const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate }) => {
                         We're building a vibrant ecosystem to empower the next generation of builders and innovators. Join us in creating opportunities and driving talent development in the AI era.
                     </p>
                     <div className="mt-10">
-                         <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Partnership', '#contact-form'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                         <a href="#" onClick={(e) => { e.preventDefault(); onOpenPartnershipModal(); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Become a Partner
                         </a>
                     </div>
@@ -168,89 +141,22 @@ const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate }) => {
                 </div>
             </section>
 
-            {/* Let's Build Together Form Section */}
-            <section id="contact-form" className="gradient-bg-section text-white py-20 sm:py-24">
+            {/* Let's Build Together CTA Section */}
+            <section id="contact-cta" className="gradient-bg-section text-white py-20 sm:py-24">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                      <div className="max-w-3xl mx-auto text-center">
                         <h2 className="text-4xl md:text-5xl font-heading font-semibold drop-shadow-sm">Let's Build Together</h2>
                         <p className="mt-4 text-lg text-white/90 font-body">
-                            Interested in partnering with WeCreate? Fill out the form below, and our partnership team will get in touch with you shortly.
+                            Interested in partnering with WeCreate? Get in touch with our partnership team and let's discuss how we can collaborate.
                         </p>
-                    </div>
-                    <div className="max-w-3xl mx-auto mt-12">
-                        <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 sm:p-10 rounded-xl shadow-soft">
-                             <div className="grid md:grid-cols-2 gap-6 mb-6">
-                                <InputField label="Full Name" name="fullName" value={formData.fullName} onChange={handleInputChange} required />
-                                <InputField label="Organization" name="organization" value={formData.organization} onChange={handleInputChange} />
-                                <InputField label="Email Address" name="email" type="email" value={formData.email} onChange={handleInputChange} required />
-                                <InputField label="Phone Number" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} />
-                            </div>
-                            <div className="mb-6">
-                                <label htmlFor="partnershipType" className="block text-sm font-medium text-white mb-2">Partnership Type</label>
-                                <select
-                                    id="partnershipType"
-                                    name="partnershipType"
-                                    value={formData.partnershipType}
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 text-white appearance-none bg-no-repeat bg-right-4"
-                                    style={{
-                                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                                        backgroundPosition: 'right 1rem center',
-                                        backgroundSize: '1.25em'
-                                    }}
-                                >
-                                    <option className="text-black">Corporate Partnership</option>
-                                    <option className="text-black">Educational Partnership</option>
-                                    <option className="text-black">Community Partnership</option>
-                                </select>
-                            </div>
-                            <div className="mb-8">
-                                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">Message</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    rows={5}
-                                    value={formData.message}
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 text-white"
-                                    placeholder="Tell us how you'd like to collaborate..."
-                                ></textarea>
-                            </div>
-                            <button type="submit" className="w-full bg-white text-primary hover:bg-gray-200 font-heading font-bold py-4 px-4 rounded-lg transition-all duration-300 shadow-mild">
-                                Submit Inquiry
+                        <div className="mt-8">
+                            <button onClick={onOpenPartnershipModal} className="w-auto bg-white text-primary hover:bg-gray-200 font-heading font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-mild">
+                                Start the Conversation
                             </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </section>
-        </div>
-    );
-};
-
-interface InputFieldProps {
-    label: string;
-    name: string;
-    type?: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean;
-}
-
-const InputField: React.FC<InputFieldProps> = ({ label, name, type = 'text', value, onChange, required = false }) => {
-    return (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-white mb-2">
-                {label} {required && <span className="text-red-400">*</span>}
-            </label>
-            <input
-                type={type}
-                id={name}
-                name={name}
-                value={value}
-                onChange={onChange}
-                required={required}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 text-white"
-            />
         </div>
     );
 };

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Page, NavigateFunction } from '../App';
+import { Page, NavigateFunction, OpenModalFunction } from '../App';
 
 interface ProgramsPageProps {
     onNavigate: NavigateFunction;
+    onOpenPartnershipModal: OpenModalFunction;
 }
 
 const ProgramCardLarge: React.FC<{
@@ -84,7 +85,7 @@ const ProgramCardSmall: React.FC<{
 };
 
 
-const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate }) => {
+const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnershipModal }) => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProgram, setSelectedProgram] = useState('');
@@ -209,7 +210,7 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate }) => {
                         Let us help you find the perfect program for your goals. Get in touch with our team for a personalized consultation.
                     </p>
                     <div className="mt-8">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Partnership', '#contact-form'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                        <a href="#" onClick={(e) => { e.preventDefault(); onOpenPartnershipModal(); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Contact Us
                         </a>
                     </div>

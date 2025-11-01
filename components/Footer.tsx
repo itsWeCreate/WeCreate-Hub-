@@ -26,6 +26,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('About'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</a></li>
                             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</a></li>
                             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Events'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Events</a></li>
+                             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Admin'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Admin</a></li>
                         </ul>
                     </div>
                     <div>
