@@ -114,19 +114,19 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
             onClick={onClose}
         >
             <div 
-                className="bg-background-light rounded-xl shadow-xl max-w-2xl w-full relative transform transition-all duration-300 scale-100 flex flex-col max-h-[calc(100vh-2rem)]"
+                className="bg-background-light rounded-xl shadow-xl p-8 max-w-2xl w-full relative transform transition-all duration-300 scale-100"
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
             >
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10" aria-label="Close modal" disabled={isSubmitting}>
+                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close modal" disabled={isSubmitting}>
                     <span className="material-symbols-outlined">close</span>
                 </button>
-                <div className="text-center p-8 pb-6 flex-shrink-0">
+                <div className="text-center mb-6">
                     <h2 className="text-3xl font-heading font-semibold text-text-heading-light">Let's Build Together</h2>
                     <p className="mt-2 text-text-body-light">
                         Interested in partnering with WeCreate? Fill out the form below.
                     </p>
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto px-8 pb-8">
+                <form onSubmit={handleSubmit} className="space-y-4">
                      <div className="grid md:grid-cols-2 gap-4">
                         <InputField label="Full Name" name="fullName" value={formData.fullName} onChange={handleInputChange} required disabled={isSubmitting} />
                         <InputField label="Organization" name="organization" value={formData.organization} onChange={handleInputChange} disabled={isSubmitting} />
