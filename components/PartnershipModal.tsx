@@ -36,7 +36,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
     };
 
     // Safely saves a backup of the inquiry to the browser's local storage.
-    const saveToLocalStorage = (data: typeof formData) => {
+    const saveToLocalStorage = (data: any) => {
         try {
             let existingInquiries: any[] = [];
             const storedInquiries = localStorage.getItem('partnershipInquiries');
@@ -57,6 +57,8 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        
+        const submissionData = { ...formData, formType: 'partnershipInquiry' };
 
         try {
             // FIX: Removed comparison with placeholder URL to resolve TypeScript error.
@@ -65,7 +67,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
             // check is sufficient to determine if the URL is configured.
             if (!GOOGLE_SHEET_WEB_APP_URL) {
                  console.warn('Google Sheets URL is not configured. Saving to localStorage only.');
-                 saveToLocalStorage(formData);
+                 saveToLocalStorage(submissionData);
                  onSuccess('Inquiry saved locally. Please configure Google Sheets to enable full functionality.');
             } else {
                 // Send data to Google Apps Script
@@ -73,7 +75,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
                     method: 'POST',
                     // Use 'text/plain' to avoid CORS preflight issues with simple deployments
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify(submissionData),
                 });
                 
                 const result = await response.json();
@@ -84,7 +86,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
             }
             
             // Also save a local backup for the admin panel.
-            saveToLocalStorage(formData);
+            saveToLocalStorage(submissionData);
             
             // Reset form and close modal
             setFormData({
@@ -96,7 +98,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
         } catch (error) {
             console.error("An error occurred during form submission:", error);
             // If network or script fails, still save locally and notify the user.
-            saveToLocalStorage(formData);
+            saveToLocalStorage(submissionData);
             onSuccess("Your inquiry was saved, but we couldn't send it to our team. Please contact us directly.");
             onClose();
         } finally {
