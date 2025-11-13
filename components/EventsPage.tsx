@@ -5,7 +5,7 @@ import { Page, NavigateFunction, OpenModalFunction } from '../App';
 const events = [
     {
         month: 'NOV',
-        day: '3',
+        day: '17',
         type: 'COMMUNITY',
         title: 'AI Office Hours',
         time: '7:00 PM - 9:00 PM EST',
@@ -17,7 +17,7 @@ const events = [
     },
     {
         month: 'NOV',
-        day: '4',
+        day: '18',
         type: 'WORKSHOP',
         title: 'AI Exploration Labs',
         time: '5:00 PM - 6:00 PM EST',
@@ -29,7 +29,7 @@ const events = [
     },
     {
         month: 'NOV',
-        day: '10',
+        day: '24',
         type: 'COMMUNITY',
         title: 'AI Office Hours',
         time: '7:00 PM - 9:00 PM EST',
