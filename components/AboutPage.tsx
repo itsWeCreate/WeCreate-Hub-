@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Page, NavigateFunction } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 const ValueCard: React.FC<{ icon: string; title: string; description: string; }> = ({ icon, title, description }) => (
     <div className="bg-card-bg-light p-6 rounded-xl border border-border-light text-center h-full shadow-soft transition hover:-translate-y-1">
@@ -9,14 +8,6 @@ const ValueCard: React.FC<{ icon: string; title: string; description: string; }>
         </div>
         <h3 className="text-xl font-heading font-semibold mb-2">{title}</h3>
         <p className="text-text-body-light leading-relaxed">{description}</p>
-    </div>
-);
-
-const TeamMember: React.FC<{ imgSrc: string; name: string; title: string; }> = ({ imgSrc, name, title }) => (
-    <div>
-        <img src={imgSrc} alt={`Portrait of ${name}`} className="w-40 h-40 rounded-full mx-auto mb-4 object-cover shadow-mild bg-slate-200" />
-        <h3 className="text-xl font-heading font-semibold text-text-heading-light">{name}</h3>
-        <p className="text-[#0bceff]">{title}</p>
     </div>
 );
 
@@ -32,12 +23,9 @@ const Differentiator: React.FC<{ icon: string; title: string; description: strin
     </div>
 );
 
-// FIX: Define AboutPageProps interface for component props
-interface AboutPageProps {
-    onNavigate: NavigateFunction;
-}
+const AboutPage: React.FC = () => {
+    const navigate = useNavigate();
 
-const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
     return (
         <div className="relative overflow-hidden bg-background-light">
             {/* Decorative Blobs */}
@@ -157,9 +145,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                         Ready to start your journey into the world of AI? Connect with fellow builders, attend our events, and become part of South Florida's future tech leadership.
                     </p>
                     <div className="mt-8">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Explore Our Programs
-                        </a>
+                        </button>
                     </div>
                 </div>
             </section>

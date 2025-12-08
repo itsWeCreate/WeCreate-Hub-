@@ -1,11 +1,9 @@
 import React from 'react';
-import { Page, NavigateFunction } from '../App';
+import { useNavigate } from 'react-router-dom';
 
-interface HomePageProps {
-    onNavigate: NavigateFunction;
-}
+const HomePage: React.FC = () => {
+    const navigate = useNavigate();
 
-const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     return (
         <>
             {/* Hero Section */}
@@ -19,9 +17,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                         Transform your career with South Florida's premier AI-powered training program. Learn cutting-edge skills, build real projects, and launch into the tech economy.
                     </p>
                     <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto">
+                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto">
                             Start Your Journey
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background-light to-transparent"></div>
@@ -69,9 +67,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                                 <DifferentiatorItem icon="groups" title="Community-Powered" description="Join a vibrant network of learners, mentors, and employers right here in South Florida." />
                             </div>
                             <div className="mt-10">
-                                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('About'); }} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                                <button onClick={() => navigate('/about')} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                                     Discover All Five Differentiators
-                                </a>
+                                </button>
                             </div>
                         </div>
                         <div className="mt-10 lg:mt-0 relative">
@@ -89,9 +87,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                         Join the next cohort of South Florida's future tech leaders. Applications are now open for our AI Career Intensive.
                     </p>
                     <div className="mt-8">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Start Your Journey
-                        </a>
+                        </button>
                     </div>
                 </div>
             </section>

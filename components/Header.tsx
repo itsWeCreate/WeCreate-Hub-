@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
-import { Page, NavigateFunction } from '../App';
+import { Link, useLocation } from 'react-router-dom';
 
-interface HeaderProps {
-    currentPage: Page;
-    onNavigate: NavigateFunction;
-}
-
-const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
+const Header: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const location = useLocation();
+
+    // Determine if we should use light theme (dark text) based on the route
+    // About (/about) and Admin (/admin) pages typically have light backgrounds at the top
+    const isLightTheme = ['/about', '/admin'].includes(location.pathname);
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -16,59 +15,52 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
         } else {
             document.body.style.overflow = 'auto';
         }
-        // Cleanup function to reset overflow when component unmounts
         return () => {
             document.body.style.overflow = 'auto';
         };
     }, [isMobileMenuOpen]);
 
-    const navLinks: { name: Page }[] = [
-        { name: 'Home' },
-        { name: 'About' },
-        { name: 'Programs' },
-        { name: 'Events' },
-        { name: 'Partnership' },
+    const navLinks = [
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Programs', path: '/programs' },
+        { name: 'Events', path: '/events' },
+        { name: 'Partnership', path: '/partnership' },
     ];
 
-    const handleMobileLinkClick = (page: Page) => {
-        onNavigate(page);
-        setIsMobileMenuOpen(false);
-    };
-
-    const mobileMenuIconColor = currentPage === 'About' ? 'text-text-heading-light' : 'text-white';
+    const mobileMenuIconColor = isLightTheme ? 'text-text-heading-light' : 'text-white';
+    
+    // Helper to determine active state
+    const isActive = (path: string) => location.pathname === path;
 
     return (
         <>
             <header className="absolute top-0 left-0 right-0 z-30">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <nav className="flex items-center justify-between py-6">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Home'); }} className={`text-[2.3rem] font-logo font-semibold ${currentPage === 'About' ? 'text-text-heading-light' : 'text-white'}`}>
+                        <Link to="/" className={`text-[2.3rem] font-logo font-semibold ${isLightTheme ? 'text-text-heading-light' : 'text-white'}`}>
                             WeCreate
-                        </a>
+                        </Link>
                         <div className="hidden md:flex items-center space-x-8">
                             {navLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.name}
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        onNavigate(link.name);
-                                    }}
+                                    to={link.path}
                                     className={`text-xl font-medium transition-all duration-300 ${
-                                        currentPage === link.name
+                                        isActive(link.path)
                                             ? 'text-[#00d9ff] font-bold'
-                                            : currentPage === 'About'
+                                            : isLightTheme
                                                 ? 'text-text-heading-light hover:text-[#00d9ff] hover:font-bold'
                                                 : 'text-white hover:text-[#00d9ff] hover:font-bold'
                                     }`}
                                 >
                                     {link.name}
-                                </a>
+                                </Link>
                             ))}
                         </div>
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="hidden md:block bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-mild">
+                        <Link to="/programs" className="hidden md:block bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-mild">
                             Get Started
-                        </a>
+                        </Link>
                         <div className="md:hidden">
                             <button
                                 onClick={() => setIsMobileMenuOpen(true)}
@@ -98,34 +90,31 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
             >
                 <div className="p-6 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-12">
-                         <a id="mobile-menu-title" href="#" onClick={(e) => { e.preventDefault(); handleMobileLinkClick('Home'); }} className="text-[2.3rem] font-logo font-semibold text-text-heading-light">
+                         <Link id="mobile-menu-title" to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-[2.3rem] font-logo font-semibold text-text-heading-light">
                             We<span className="text-[#0bceff]">Create</span>
-                        </a>
+                        </Link>
                         <button onClick={() => setIsMobileMenuOpen(false)} className="text-text-heading-light" aria-label="Close menu">
                             <span className="material-symbols-outlined text-4xl">close</span>
                         </button>
                     </div>
                     <nav className="flex flex-col items-center justify-center flex-grow space-y-8">
                         {navLinks.map((link) => (
-                            <a
+                            <Link
                                 key={link.name}
-                                href="#"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleMobileLinkClick(link.name);
-                                }}
+                                to={link.path}
+                                onClick={() => setIsMobileMenuOpen(false)}
                                 className={`text-3xl font-heading font-medium transition-colors duration-300 ${
-                                    currentPage === link.name ? 'text-primary' : 'text-text-heading-light hover:text-primary'
+                                    isActive(link.path) ? 'text-primary' : 'text-text-heading-light hover:text-primary'
                                 }`}
                             >
                                 {link.name}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
                     <div className="mt-8 text-center">
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleMobileLinkClick('Programs'); }} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-10 rounded-lg transition-all duration-300 shadow-mild text-xl w-full inline-block">
+                        <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-10 rounded-lg transition-all duration-300 shadow-mild text-xl w-full inline-block">
                             Get Started
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </aside>

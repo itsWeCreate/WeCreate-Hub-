@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Page, NavigateFunction, OpenModalFunction } from '../App';
+import { OpenModalFunction } from '../App';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 interface ProgramsPageProps {
-    onNavigate: NavigateFunction;
     onOpenPartnershipModal: OpenModalFunction;
     onSuccess: (message: string) => void;
 }
@@ -86,7 +85,7 @@ const ProgramCardSmall: React.FC<{
 };
 
 
-const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnershipModal, onSuccess }) => {
+const ProgramsPage: React.FC<ProgramsPageProps> = ({ onOpenPartnershipModal, onSuccess }) => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProgram, setSelectedProgram] = useState('');
@@ -267,9 +266,9 @@ const ProgramsPage: React.FC<ProgramsPageProps> = ({ onNavigate, onOpenPartnersh
                         Let us help you find the perfect program for your goals. Get in touch with our team for a personalized consultation.
                     </p>
                     <div className="mt-8">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onOpenPartnershipModal(); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                        <button onClick={onOpenPartnershipModal} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Contact Us
-                        </a>
+                        </button>
                     </div>
                 </div>
             </section>

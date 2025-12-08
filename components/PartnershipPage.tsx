@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page, NavigateFunction, OpenModalFunction } from '../App';
+import { OpenModalFunction } from '../App';
 import { CheckIcon } from './icons';
 
 const CollaborationCard: React.FC<{
@@ -47,11 +47,10 @@ const BenefitItem: React.FC<{
 }
 
 interface PartnershipPageProps {
-    onNavigate: NavigateFunction;
     onOpenPartnershipModal: OpenModalFunction;
 }
 
-const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate, onOpenPartnershipModal }) => {
+const PartnershipPage: React.FC<PartnershipPageProps> = ({ onOpenPartnershipModal }) => {
     return (
         <div className="bg-background-light">
             {/* Hero Section */}
@@ -66,9 +65,9 @@ const PartnershipPage: React.FC<PartnershipPageProps> = ({ onNavigate, onOpenPar
                         We're building a vibrant ecosystem to empower the next generation of builders and innovators. Join us in creating opportunities and driving talent development in the AI era.
                     </p>
                     <div className="mt-10">
-                         <a href="#" onClick={(e) => { e.preventDefault(); onOpenPartnershipModal(); }} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
+                         <button onClick={onOpenPartnershipModal} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
                             Become a Partner
-                        </a>
+                        </button>
                     </div>
                 </div>
             </section>

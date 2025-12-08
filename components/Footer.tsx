@@ -1,20 +1,16 @@
 import React from 'react';
-import { Page, NavigateFunction } from '../App';
+import { Link } from 'react-router-dom';
 import { LinkedInIcon, InstagramIcon } from './icons';
 
-interface FooterProps {
-    onNavigate: NavigateFunction;
-}
-
-const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+const Footer: React.FC = () => {
     return (
        <footer className="bg-slate-100">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="md:col-span-1">
-                        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Home'); }} className="text-3xl font-logo font-semibold text-text-heading-light">
+                        <Link to="/" className="text-3xl font-logo font-semibold text-text-heading-light">
                            We<span className="text-[#0bceff]">Create</span>
-                        </a>
+                        </Link>
                         <p className="mt-4 text-text-body-light font-body">
                             Building the future of work, together. Transform your career with South Florida's premier AI training community.
                         </p>
@@ -22,11 +18,11 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     <div>
                         <h3 className="font-heading font-semibold text-text-heading-light">Quick Links</h3>
                         <ul className="mt-4 space-y-3">
-                            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Home'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Home</a></li>
-                            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('About'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</a></li>
-                            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Programs'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</a></li>
-                            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Events'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Events</a></li>
-                             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('Admin'); }} className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Admin</a></li>
+                            <li><Link to="/" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Home</Link></li>
+                            <li><Link to="/about" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</Link></li>
+                            <li><Link to="/programs" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</Link></li>
+                            <li><Link to="/events" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Events</Link></li>
+                             <li><Link to="/admin" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Admin</Link></li>
                         </ul>
                     </div>
                     <div>
