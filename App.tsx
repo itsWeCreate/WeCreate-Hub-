@@ -10,6 +10,7 @@ import PartnershipPage from './components/PartnershipPage';
 import PartnershipModal from './components/PartnershipModal';
 import AdminPage from './components/AdminPage';
 import PasswordPage from './components/PasswordPage';
+import InfoPage from './components/InfoPage';
 import Toast from './components/Toast';
 
 export type OpenModalFunction = () => void;
@@ -82,6 +83,7 @@ const App: React.FC = () => {
                     <Route path="/programs" element={<ProgramsPage {...modalProps} onSuccess={showToast} />} />
                     <Route path="/events" element={<EventsPage {...modalProps} />} />
                     <Route path="/partnership" element={<PartnershipPage {...modalProps} />} />
+                    <Route path="/info" element={<InfoPage />} />
                     <Route 
                         path="/admin" 
                         element={isAuthenticated ? <AdminPage onLogout={handleLogout} /> : <PasswordPage onLogin={handleLogin} />} 
