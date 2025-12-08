@@ -6,7 +6,7 @@ const Header: React.FC = () => {
     const location = useLocation();
 
     // Determine if we should use light theme (dark text) based on the route
-    // About, Admin, and Info pages typically have light backgrounds at the top
+    // About (/about), Admin (/admin), and Info (/info) pages typically have light backgrounds at the top
     const isLightTheme = ['/about', '/admin', '/info'].includes(location.pathname);
 
     useEffect(() => {
