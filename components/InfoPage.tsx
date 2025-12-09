@@ -6,30 +6,114 @@ import { InfoPageConfig, DEFAULT_INFO_CONFIG } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 // Reusable Link Card Component
-const LinkCard = ({ icon, title, onClick, subtext, image }: { icon: string, title: string, onClick: () => void, subtext?: string, image?: string }) => (
-    <button
-        onClick={onClick}
-        className="w-full bg-white p-3 sm:p-4 rounded-xl shadow-soft border border-border-light flex items-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group text-left relative overflow-hidden"
-    >
-        {image ? (
-            <div className="w-14 h-14 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-100 mr-4">
-                <img src={image} alt="" className="w-full h-full object-cover" />
-            </div>
-        ) : (
-            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300 flex-shrink-0 mr-4">
+const LinkCard = ({ 
+    icon, 
+    title, 
+    onClick, 
+    subtext, 
+    image, 
+    fullWidth,
+    price,
+    ctaText
+}: { 
+    icon: string, 
+    title: string, 
+    onClick: () => void, 
+    subtext?: string, 
+    image?: string, 
+    fullWidth?: boolean,
+    price?: string,
+    ctaText?: string
+}) => {
+    // Determine if this is a "Rich Card" (Stan Store style) or a Simple Link
+    const isRichCard = Boolean(ctaText || price || image);
+
+    if (isRichCard) {
+        return (
+            <button
+                onClick={onClick}
+                className={`
+                    relative bg-white rounded-3xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.06)] border border-gray-100 
+                    transition-all duration-300 hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] hover:-translate-y-1 group 
+                    text-left overflow-hidden flex flex-col h-full
+                    ${fullWidth ? 'sm:col-span-2' : 'col-span-1'}
+                `}
+            >
+                <div className="p-6 flex flex-col h-full w-full">
+                    <div className="flex items-start gap-5 w-full">
+                        {/* Image / Icon Area */}
+                        <div className="flex-shrink-0">
+                            {image ? (
+                                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gray-50 overflow-hidden shadow-inner border border-gray-100">
+                                    <img src={image} alt="" className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105" />
+                                </div>
+                            ) : (
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-50 rounded-2xl text-primary flex-shrink-0 shadow-sm border border-gray-100">
+                                    <span className="material-symbols-outlined text-4xl">{icon}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="flex-grow min-w-0 flex flex-col justify-center py-1">
+                            <h3 className="font-heading font-bold text-gray-900 text-lg sm:text-xl leading-tight break-words mb-1">
+                                {title}
+                            </h3>
+                            
+                            {/* Price - Integrated nicely under title */}
+                            {price && (
+                                <div className="font-heading font-bold text-primary text-lg mb-1.5">
+                                    {price}
+                                </div>
+                            )}
+
+                            {subtext && (
+                                <p className="text-sm sm:text-base text-gray-500 leading-relaxed break-words line-clamp-3">
+                                    {subtext}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {/* CTA Button - Pushed to bottom */}
+                    {ctaText && (
+                        <div className="mt-6 pt-2 w-full">
+                            <div className="w-full bg-secondary hover:bg-blue-600 text-white font-heading font-bold py-3.5 px-6 rounded-xl text-center transition-colors shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 group-hover:bg-blue-600">
+                                {ctaText}
+                                <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </button>
+        );
+    }
+
+    // Simple Link Layout
+    return (
+        <button
+            onClick={onClick}
+            className={`
+                relative bg-white rounded-2xl shadow-sm border border-gray-100 
+                transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/20 group 
+                text-left overflow-hidden flex items-center p-4 min-h-[5rem]
+                ${fullWidth ? 'sm:col-span-2' : 'col-span-1'}
+            `}
+        >
+            <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300 flex-shrink-0 mr-4 shadow-sm">
                 <span className="material-symbols-outlined text-2xl">{icon}</span>
             </div>
-        )}
-        
-        <div className="flex-grow z-10">
-            <h3 className="font-heading font-semibold text-text-heading-light text-lg leading-tight">{title}</h3>
-            {subtext && <p className="text-sm text-text-body-light mt-1">{subtext}</p>}
-        </div>
-        <div className="text-gray-300 group-hover:text-primary transition-colors ml-2">
-            <span className="material-symbols-outlined">chevron_right</span>
-        </div>
-    </button>
-);
+            
+            <div className="flex-grow z-10 min-w-0 flex flex-col justify-center">
+                <h3 className="font-heading font-semibold text-gray-900 text-lg leading-snug break-words pr-2 group-hover:text-primary transition-colors">{title}</h3>
+                {subtext && <p className="text-sm text-gray-500 mt-0.5 leading-snug break-words opacity-90 pr-2">{subtext}</p>}
+            </div>
+            <div className="text-gray-300 group-hover:text-primary transition-colors ml-2 flex-shrink-0">
+                <span className="material-symbols-outlined">chevron_right</span>
+            </div>
+        </button>
+    );
+};
 
 // Expandable Content Card for policies/requirements
 const InfoCard = ({ icon, title, content }: { icon: string, title: string, content: string }) => {
@@ -44,19 +128,19 @@ const InfoCard = ({ icon, title, content }: { icon: string, title: string, conte
     ));
 
     return (
-        <div className="w-full bg-white rounded-xl shadow-soft border border-border-light overflow-hidden transition-all duration-300">
+        <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full p-4 flex items-center text-left hover:bg-gray-50 transition-colors"
+                className="w-full p-5 flex items-center text-left hover:bg-gray-50/80 transition-colors"
             >
                 <div className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full text-secondary flex-shrink-0">
                     <span className="material-symbols-outlined text-xl">{icon}</span>
                 </div>
-                <h3 className="ml-4 font-heading font-semibold text-text-heading-light text-lg flex-grow">{title}</h3>
+                <h3 className="ml-4 font-heading font-semibold text-gray-800 text-lg flex-grow">{title}</h3>
                 <span className={`material-symbols-outlined text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
             </button>
             <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="p-4 pt-0 text-text-body-light text-sm border-t border-gray-100 mt-2 leading-relaxed">
+                <div className="p-5 pt-0 pl-[4.5rem] text-gray-600 text-base leading-relaxed">
                     {formattedContent}
                 </div>
             </div>
@@ -68,6 +152,7 @@ const InfoPage: React.FC = () => {
     const navigate = useNavigate();
     const [config, setConfig] = useState<InfoPageConfig>(DEFAULT_INFO_CONFIG);
     const [loading, setLoading] = useState(true);
+    const [showResources, setShowResources] = useState(false);
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -129,45 +214,46 @@ const InfoPage: React.FC = () => {
     const { profile, buttons, sections, socialLinks } = config;
 
     return (
-        <div className="bg-background-light min-h-screen pt-32 pb-24">
-            <div className="max-w-md mx-auto px-4 sm:px-6">
+        <div className="bg-[#FAFAFA] min-h-screen pt-32 pb-24">
+            {/* Increased max-width from xl to 3xl for more breathing room */}
+            <div className="max-w-3xl mx-auto px-5 sm:px-8">
 
                 {/* Profile Section */}
-                <div className="flex flex-col items-center text-center mb-10">
-                    <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary-light to-secondary-light p-1 shadow-soft mb-4">
-                        <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                <div className="flex flex-col items-center text-center mb-12 animate-fade-in-up">
+                    <div className="w-36 h-36 rounded-full bg-white p-1.5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] mb-6 transform hover:scale-105 transition-transform duration-300">
+                        <div className="w-full h-full rounded-full bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100">
                             {profile.avatarUrl ? (
                                 <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
                             ) : (
                                 /* Default Logo Representation */
-                                <span className="font-logo font-bold text-3xl text-primary">WC</span>
+                                <span className="font-logo font-bold text-5xl text-primary">WC</span>
                             )}
                         </div>
                     </div>
-                    <h1 className="text-3xl font-heading font-bold text-text-heading-light flex items-center gap-2">
+                    <h1 className="text-4xl font-heading font-bold text-gray-900 flex items-center justify-center gap-2 mb-3">
                         {profile.name} 
-                        {profile.verified && <span className="text-[#0bceff] material-symbols-outlined text-2xl" title="Verified Account">verified</span>}
+                        {profile.verified && <span className="text-[#0bceff] material-symbols-outlined text-3xl align-middle" title="Verified Account">verified</span>}
                     </h1>
-                    <p className="mt-2 text-text-body-light font-body whitespace-pre-line">
+                    <p className="text-lg text-gray-600 font-body whitespace-pre-line max-w-lg leading-relaxed">
                         {profile.bio}
                     </p>
                     
                     {/* Social Icons Mini Row */}
-                    <div className="flex gap-4 mt-6">
+                    <div className="flex gap-4 mt-8">
                         {socialLinks.map(link => {
                             if (!link.url) return null;
                             
                             let Icon = null;
-                            let colorClass = "hover:text-primary hover:bg-purple-50";
+                            let hoverClass = "hover:text-primary hover:bg-purple-50";
 
                             switch(link.platform) {
                                 case 'instagram': 
                                     Icon = <InstagramIcon className="w-6 h-6"/>; 
-                                    colorClass = "hover:text-[#E1306C] hover:bg-pink-50";
+                                    hoverClass = "hover:text-[#E1306C] hover:bg-pink-50";
                                     break;
                                 case 'linkedin': 
                                     Icon = <LinkedInIcon className="w-6 h-6"/>; 
-                                    colorClass = "hover:text-[#0077b5] hover:bg-blue-50";
+                                    hoverClass = "hover:text-[#0077b5] hover:bg-blue-50";
                                     break;
                                 case 'email':
                                     Icon = <span className="material-symbols-outlined text-2xl">mail</span>;
@@ -185,7 +271,7 @@ const InfoPage: React.FC = () => {
                                     href={link.url} 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
-                                    className={`text-gray-400 transition-colors p-2 rounded-full ${colorClass}`}
+                                    className={`text-gray-400 transition-all p-3 rounded-full bg-white shadow-sm border border-gray-100 hover:scale-110 ${hoverClass}`}
                                 >
                                     {Icon}
                                 </a>
@@ -194,8 +280,8 @@ const InfoPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Main Links Stack */}
-                <div className="space-y-4">
+                {/* Main Links Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                     {buttons.filter(b => b.isActive).map(btn => (
                         <LinkCard
                             key={btn.id}
@@ -203,32 +289,45 @@ const InfoPage: React.FC = () => {
                             title={btn.title}
                             subtext={btn.subtitle}
                             image={btn.image}
+                            fullWidth={btn.fullWidth}
+                            price={btn.price}
+                            ctaText={btn.ctaText}
                             onClick={() => handleLinkClick(btn.url, btn.isExternal)}
                         />
                     ))}
                 </div>
 
-                {/* Divider */}
-                <div className="my-10 flex items-center gap-4 opacity-60">
-                     <div className="h-px bg-border-light flex-grow"></div>
-                     <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Resources</span>
-                     <div className="h-px bg-border-light flex-grow"></div>
-                </div>
+                {/* Collapsible Resources Toggle */}
+                {sections.length > 0 && (
+                    <>
+                        <div className="mt-16 mb-6 flex items-center justify-center">
+                            <button 
+                                onClick={() => setShowResources(!showResources)} 
+                                className="group flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-all focus:outline-none"
+                            >
+                                <div className="text-xs font-bold text-gray-400 group-hover:text-primary uppercase tracking-[0.2em] transition-colors">
+                                    More Resources
+                                </div>
+                                <span className={`material-symbols-outlined text-gray-400 group-hover:text-primary transition-transform duration-300 ${showResources ? 'rotate-180' : 'animate-bounce'}`}>expand_more</span>
+                            </button>
+                        </div>
 
-                {/* Expandable Info Sections */}
-                <div className="space-y-4">
-                    {sections.map(section => (
-                        <InfoCard 
-                            key={section.id}
-                            icon={section.icon}
-                            title={section.title}
-                            content={section.content}
-                        />
-                    ))}
-                </div>
+                        {/* Expandable Info Sections */}
+                        <div className={`space-y-4 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${showResources ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            {sections.map(section => (
+                                <InfoCard 
+                                    key={section.id}
+                                    icon={section.icon}
+                                    title={section.title}
+                                    content={section.content}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
                 
-                <div className="mt-16 text-center text-sm text-gray-400">
-                    <p>© {new Date().getFullYear()} WeCreate</p>
+                <div className="mt-20 text-center">
+                    <p className="text-sm font-medium text-gray-300">© {new Date().getFullYear()} WeCreate</p>
                 </div>
 
             </div>

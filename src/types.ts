@@ -8,6 +8,9 @@ export interface LinkButton {
     image?: string; // Optional thumbnail image URL
     isExternal: boolean;
     isActive: boolean;
+    fullWidth?: boolean; // New property for grid layout control
+    price?: string; // New: Display price (e.g. "$197")
+    ctaText?: string; // New: Button text (e.g. "Get Started")
 }
 
 export interface InfoSection {
@@ -50,39 +53,49 @@ export const DEFAULT_INFO_CONFIG: InfoPageConfig = {
     buttons: [
         {
             id: 'btn1',
-            title: 'Explore Our Programs',
-            subtitle: 'Launch your AI career today',
+            title: 'AI Career Intensive',
+            subtitle: 'Launch your AI career in 12 weeks. Application Open.',
             url: '/programs',
             icon: 'rocket_launch',
             isExternal: false,
-            isActive: true
+            isActive: true,
+            fullWidth: true,
+            price: 'Applications Open',
+            ctaText: 'Apply Now'
         },
         {
             id: 'btn2',
             title: 'Upcoming Events',
-            subtitle: 'Workshops, meetups & more',
+            subtitle: 'Workshops, meetups & community gatherings.',
             url: '/events',
             icon: 'calendar_month',
             isExternal: false,
-            isActive: true
+            isActive: true,
+            fullWidth: true,
+            ctaText: 'View Calendar'
         },
         {
             id: 'btn3',
             title: 'Partner With Us',
-            subtitle: 'For corporations & educators',
+            subtitle: 'For corporations & educators looking to innovate.',
             url: '/partnership',
             icon: 'handshake',
             isExternal: false,
-            isActive: true
+            isActive: true,
+            fullWidth: true,
+            ctaText: 'Collaborate'
         },
         {
             id: 'btn4',
             title: 'Join the Community',
-            subtitle: 'Connect on Skool',
+            subtitle: 'Connect with builders on Skool.',
             url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
             icon: 'groups',
             isExternal: true,
-            isActive: true
+            isActive: true,
+            fullWidth: true,
+            price: 'Free',
+            ctaText: 'Join Now'
         }
     ],
     sections: [

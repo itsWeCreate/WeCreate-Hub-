@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InfoPageConfig, DEFAULT_INFO_CONFIG, LinkButton, InfoSection } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
@@ -8,6 +8,10 @@ const InfoPageEditor: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    // For Drag and Drop
+    const dragItem = useRef<number | null>(null);
+    const dragOverItem = useRef<number | null>(null);
 
     // Fetch existing config on load
     useEffect(() => {
@@ -23,7 +27,12 @@ const InfoPageEditor: React.FC = () => {
                 try {
                     const data = JSON.parse(text);
                     if (data && data.profile) {
-                        setConfig(prev => ({ ...prev, ...data }));
+                        // Ensure defaults for new fields like fullWidth
+                        const buttonsWithDefaults = (data.buttons || []).map((b: any) => ({
+                            ...b,
+                            fullWidth: b.fullWidth !== undefined ? b.fullWidth : true
+                        }));
+                        setConfig(prev => ({ ...prev, ...data, buttons: buttonsWithDefaults }));
                     }
                 } catch (e) {
                     console.warn("Editor received non-JSON config, using default.");
@@ -101,7 +110,8 @@ const InfoPageEditor: React.FC = () => {
             url: '',
             icon: 'link',
             isExternal: true,
-            isActive: true
+            isActive: true,
+            fullWidth: true
         };
         setConfig(prev => ({ ...prev, buttons: [...prev.buttons, newBtn] }));
     };
@@ -111,14 +121,35 @@ const InfoPageEditor: React.FC = () => {
         setConfig(prev => ({ ...prev, buttons: prev.buttons.filter(b => b.id !== id) }));
     };
 
-    const moveButton = (index: number, direction: 'up' | 'down') => {
-        const newButtons = [...config.buttons];
-        if (direction === 'up' && index > 0) {
-            [newButtons[index], newButtons[index - 1]] = [newButtons[index - 1], newButtons[index]];
-        } else if (direction === 'down' && index < newButtons.length - 1) {
-            [newButtons[index], newButtons[index + 1]] = [newButtons[index + 1], newButtons[index]];
+    // --- Drag and Drop Logic ---
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+        dragItem.current = position;
+        // Effect for dragging
+        e.dataTransfer.effectAllowed = "move";
+        // Ghost image transparency or styling can be handled by browser usually
+    };
+
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+        dragOverItem.current = position;
+        e.preventDefault();
+    };
+    
+    // Necessary to allow dropping
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        const copyListItems = [...config.buttons];
+        if (dragItem.current !== null && dragOverItem.current !== null) {
+            const dragItemContent = copyListItems[dragItem.current];
+            copyListItems.splice(dragItem.current, 1);
+            copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+            dragItem.current = null;
+            dragOverItem.current = null;
+            setConfig(prev => ({ ...prev, buttons: copyListItems }));
         }
-        setConfig(prev => ({ ...prev, buttons: newButtons }));
     };
 
     // --- Section Handlers ---
@@ -244,18 +275,25 @@ const InfoPageEditor: React.FC = () => {
                         <span className="material-symbols-outlined text-lg">add</span> Add Button
                     </button>
                 </div>
+                <p className="text-sm text-gray-500 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
+                    <span className="font-semibold">Tip:</span> Drag and drop buttons using the handle icon on the left to reorder them.
+                </p>
 
                 <div className="space-y-4">
                     {config.buttons.map((btn, index) => (
-                        <div key={btn.id} className="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors bg-gray-50">
+                        <div 
+                            key={btn.id} 
+                            className="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors bg-gray-50 cursor-default"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragEnter={(e) => handleDragEnter(e, index)}
+                            onDragOver={handleDragOver}
+                            onDrop={handleDrop}
+                        >
                             <div className="grid md:grid-cols-12 gap-4 items-start">
                                 {/* Drag Handle & Preview */}
-                                <div className="md:col-span-1 flex flex-col items-center gap-2 pt-2">
-                                    <div className="flex flex-col">
-                                        <button onClick={() => moveButton(index, 'up')} disabled={index === 0} className="text-gray-400 hover:text-primary disabled:opacity-30"><span className="material-symbols-outlined">expand_less</span></button>
-                                        <button onClick={() => moveButton(index, 'down')} disabled={index === config.buttons.length - 1} className="text-gray-400 hover:text-primary disabled:opacity-30"><span className="material-symbols-outlined">expand_more</span></button>
-                                    </div>
-                                    <span className="material-symbols-outlined text-gray-400">{btn.icon}</span>
+                                <div className="md:col-span-1 flex flex-col items-center gap-2 pt-4 cursor-grab active:cursor-grabbing">
+                                    <span className="material-symbols-outlined text-gray-400">drag_indicator</span>
                                 </div>
 
                                 {/* Main Fields */}
@@ -264,21 +302,35 @@ const InfoPageEditor: React.FC = () => {
                                         type="text" 
                                         value={btn.title} 
                                         onChange={(e) => updateButton(btn.id, 'title', e.target.value)}
-                                        placeholder="Button Title"
+                                        placeholder="Button Title (Header)"
                                         className="border-gray-300 rounded-md p-2 border text-sm font-medium"
                                     />
                                     <input 
                                         type="text" 
                                         value={btn.subtitle || ''} 
                                         onChange={(e) => updateButton(btn.id, 'subtitle', e.target.value)}
-                                        placeholder="Subtitle (optional)"
+                                        placeholder="Subtitle / Description"
+                                        className="border-gray-300 rounded-md p-2 border text-sm"
+                                    />
+                                     <input 
+                                        type="text" 
+                                        value={btn.price || ''} 
+                                        onChange={(e) => updateButton(btn.id, 'price', e.target.value)}
+                                        placeholder="Price (e.g. $197 or Free)"
+                                        className="border-gray-300 rounded-md p-2 border text-sm"
+                                    />
+                                     <input 
+                                        type="text" 
+                                        value={btn.ctaText || ''} 
+                                        onChange={(e) => updateButton(btn.id, 'ctaText', e.target.value)}
+                                        placeholder="CTA Button Text (e.g. Get Started)"
                                         className="border-gray-300 rounded-md p-2 border text-sm"
                                     />
                                     <input 
                                         type="text" 
                                         value={btn.url} 
                                         onChange={(e) => updateButton(btn.id, 'url', e.target.value)}
-                                        placeholder="URL (e.g., /programs or https://...)"
+                                        placeholder="Link URL"
                                         className="border-gray-300 rounded-md p-2 border text-sm"
                                     />
                                     <div className="flex gap-2">
@@ -286,7 +338,7 @@ const InfoPageEditor: React.FC = () => {
                                             type="text" 
                                             value={btn.icon} 
                                             onChange={(e) => updateButton(btn.id, 'icon', e.target.value)}
-                                            placeholder="Icon Name (e.g. rocket_launch)"
+                                            placeholder="Icon Name"
                                             className="border-gray-300 rounded-md p-2 border text-sm w-1/2"
                                             title="Use Google Material Symbols names"
                                         />
@@ -294,24 +346,35 @@ const InfoPageEditor: React.FC = () => {
                                             type="text" 
                                             value={btn.image || ''} 
                                             onChange={(e) => updateButton(btn.id, 'image', e.target.value)}
-                                            placeholder="Image URL (Thumbnail)"
+                                            placeholder="Image URL (For Product Card)"
                                             className="border-gray-300 rounded-md p-2 border text-sm w-1/2"
                                         />
                                     </div>
-                                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                                         <label className="flex items-center gap-2 cursor-pointer">
+                                    <div className="flex items-center gap-4 text-sm text-gray-600 col-span-2 bg-white p-2 rounded border border-gray-100">
+                                         <label className="flex items-center gap-2 cursor-pointer hover:text-primary">
+                                            <input 
+                                                type="checkbox" 
+                                                checked={btn.fullWidth !== false} // Default true if undefined
+                                                onChange={(e) => updateButton(btn.id, 'fullWidth', e.target.checked)}
+                                                className="rounded text-primary focus:ring-primary"
+                                            />
+                                            Full Width (Span 2 Columns)
+                                        </label>
+                                         <label className="flex items-center gap-2 cursor-pointer hover:text-primary">
                                             <input 
                                                 type="checkbox" 
                                                 checked={btn.isExternal} 
                                                 onChange={(e) => updateButton(btn.id, 'isExternal', e.target.checked)}
+                                                className="rounded text-primary focus:ring-primary"
                                             />
                                             Open in new tab
                                         </label>
-                                        <label className="flex items-center gap-2 cursor-pointer">
+                                        <label className="flex items-center gap-2 cursor-pointer hover:text-primary">
                                             <input 
                                                 type="checkbox" 
                                                 checked={btn.isActive} 
                                                 onChange={(e) => updateButton(btn.id, 'isActive', e.target.checked)}
+                                                className="rounded text-primary focus:ring-primary"
                                             />
                                             Active
                                         </label>
@@ -320,7 +383,7 @@ const InfoPageEditor: React.FC = () => {
 
                                 {/* Delete */}
                                 <div className="md:col-span-1 flex justify-end">
-                                    <button onClick={() => deleteButton(btn.id)} className="text-red-400 hover:text-red-600 p-2">
+                                    <button onClick={() => deleteButton(btn.id)} className="text-red-400 hover:text-red-600 p-2" title="Delete button">
                                         <span className="material-symbols-outlined">delete</span>
                                     </button>
                                 </div>
@@ -334,7 +397,7 @@ const InfoPageEditor: React.FC = () => {
             <div className="bg-white p-6 rounded-xl border border-border-light shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-heading font-semibold text-gray-800 flex items-center gap-2">
-                        <span className="material-symbols-outlined">view_list</span> Info Sections
+                        <span className="material-symbols-outlined">view_list</span> Info Sections (Resources)
                     </h3>
                     <button onClick={addSection} className="text-primary hover:bg-purple-50 px-3 py-1 rounded-md text-sm font-medium flex items-center gap-1 transition-colors">
                         <span className="material-symbols-outlined text-lg">add</span> Add Section
