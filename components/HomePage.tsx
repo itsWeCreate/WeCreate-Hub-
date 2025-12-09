@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
             {/* Hero Section */}
             <section className="relative hero-gradient text-white min-h-[60vh] md:min-h-[70vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
                 <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{backgroundImage: "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop')"}}></div>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-1">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                     <h1 className="text-[2.85rem] md:text-7xl font-heading font-semibold leading-tight drop-shadow-sm text-white">
                         Building the Future of Work, <br className="hidden md:block"/> Together
                     </h1>
@@ -17,12 +17,12 @@ const HomePage: React.FC = () => {
                         Transform your career with South Florida's premier AI-powered training program. Learn cutting-edge skills, build real projects, and launch into the tech economy.
                     </p>
                     <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto">
+                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto relative z-20">
                             Start Your Journey
                         </button>
                     </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background-light to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background-light to-transparent pointer-events-none"></div>
             </section>
 
             {/* Career Transformation Section */}
