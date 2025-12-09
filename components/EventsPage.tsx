@@ -1,47 +1,11 @@
-import React from 'react';
-import { OpenModalFunction } from '../App';
 
-const events = [
-    {
-        month: 'NOV',
-        day: '3',
-        type: 'COMMUNITY',
-        title: 'AI Office Hours',
-        time: '7:00 PM - 9:00 PM EST',
-        location: 'Virtual (via AI Foundry Skool)',
-        description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
-        buttonText: 'RSVP Today',
-        typeColor: 'text-[#0bceff]',
-        url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
-    },
-    {
-        month: 'NOV',
-        day: '4',
-        type: 'WORKSHOP',
-        title: 'AI Exploration Labs',
-        time: '5:00 PM - 6:00 PM EST',
-        location: 'Virtual',
-        description: 'Explore, build, and collaborate with us as we embark on another adventure at AI Exploration Labs.',
-        buttonText: 'Register Now',
-        typeColor: 'text-blue-600',
-        url: 'https://luma.com/calendar/cal-ZJoLn2kvSHHzV7u',
-    },
-    {
-        month: 'NOV',
-        day: '10',
-        type: 'COMMUNITY',
-        title: 'AI Office Hours',
-        time: '7:00 PM - 9:00 PM EST',
-        location: 'Virtual (via AI Foundry Skool)',
-        description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
-        buttonText: 'RSVP Today',
-        typeColor: 'text-[#0bceff]',
-        url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
-    },
-];
+import React, { useState, useEffect } from 'react';
+import { OpenModalFunction } from '../App';
+import { AppConfig, DEFAULT_APP_CONFIG, EventItem } from '../src/types';
+import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 interface EventCardProps {
-    event: typeof events[0];
+    event: EventItem;
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
@@ -49,7 +13,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <div className="bg-card-bg-light p-6 sm:p-8 rounded-xl shadow-soft border border-border-light flex flex-col sm:flex-row items-start gap-6 sm:gap-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <div className="flex-shrink-0 text-center">
                 <div className="bg-primary-light text-primary rounded-lg p-3 w-20 h-20 flex flex-col items-center justify-center shadow-sm">
-                    <p className="text-xl font-heading font-semibold">{event.month}</p>
+                    <p className="text-xl font-heading font-semibold uppercase">{event.month}</p>
                     <p className="text-4xl font-heading font-semibold leading-none">{event.day}</p>
                 </div>
             </div>
@@ -81,6 +45,38 @@ interface EventsPageProps {
 }
 
 const EventsPage: React.FC<EventsPageProps> = ({ onOpenPartnershipModal }) => {
+    const [events, setEvents] = useState<EventItem[]>(DEFAULT_APP_CONFIG.events);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+             if (!GOOGLE_SHEET_WEB_APP_URL) {
+                setIsLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${GOOGLE_SHEET_WEB_APP_URL}?action=getConfig`);
+                if (response.ok) {
+                    const text = await response.text();
+                    try {
+                        const data = JSON.parse(text);
+                        if (data && data.events) {
+                            setEvents(data.events);
+                        }
+                    } catch (e) {
+                         console.warn("Received non-JSON response, using defaults.");
+                    }
+                }
+            } catch (error) {
+                console.warn("Failed to load dynamic events, using default.", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     return (
         <div className="bg-background-light">
@@ -103,10 +99,22 @@ const EventsPage: React.FC<EventsPageProps> = ({ onOpenPartnershipModal }) => {
                             <h2 className="text-3xl md:text-4xl font-heading font-semibold text-center mb-12 text-text-heading-light">
                                 Upcoming <span className="text-[#0bceff]">Events</span>
                             </h2>
-                            <div className="space-y-8">
-                                {events.map((event, index) => (
-                                    <EventCard key={index} event={event} />
-                                ))}
+                            <div className="space-y-8 min-h-[300px]">
+                                {isLoading ? (
+                                    <div className="flex justify-center items-center h-40">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                                    </div>
+                                ) : (
+                                    events.length > 0 ? (
+                                        events.map((event, index) => (
+                                            <EventCard key={event.id || index} event={event} />
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-10 text-gray-500">
+                                            No upcoming events scheduled. Check back soon!
+                                        </div>
+                                    )
+                                )}
                             </div>
                         </div>
                     </div>

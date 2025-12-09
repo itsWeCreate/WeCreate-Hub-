@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import InfoPageEditor from './InfoPageEditor';
+import EventsEditor from './EventsEditor';
 
 interface Inquiry {
     id: number;
@@ -19,7 +20,7 @@ interface AdminPageProps {
 }
 
 const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
-    const [activeTab, setActiveTab] = useState<'inquiries' | 'editor'>('inquiries');
+    const [activeTab, setActiveTab] = useState<'inquiries' | 'info-editor' | 'events-editor'>('inquiries');
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
     useEffect(() => {
@@ -65,16 +66,24 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
                             Inquiries
                         </button>
                         <button 
-                            onClick={() => setActiveTab('editor')}
-                            className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all ${activeTab === 'editor' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                            onClick={() => setActiveTab('info-editor')}
+                            className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all ${activeTab === 'info-editor' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             Info Page Editor
+                        </button>
+                         <button 
+                            onClick={() => setActiveTab('events-editor')}
+                            className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all ${activeTab === 'events-editor' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            Events Editor
                         </button>
                     </div>
 
                     {/* Content */}
-                    {activeTab === 'editor' ? (
+                    {activeTab === 'info-editor' ? (
                         <InfoPageEditor />
+                    ) : activeTab === 'events-editor' ? (
+                        <EventsEditor />
                     ) : (
                         <div>
                             <div className="flex justify-end mb-4">

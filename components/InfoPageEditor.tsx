@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { InfoPageConfig, DEFAULT_INFO_CONFIG, LinkButton, InfoSection } from '../src/types';
+import { AppConfig, DEFAULT_APP_CONFIG, LinkButton, InfoSection } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 const InfoPageEditor: React.FC = () => {
-    const [config, setConfig] = useState<InfoPageConfig>(DEFAULT_INFO_CONFIG);
+    const [config, setConfig] = useState<AppConfig>(DEFAULT_APP_CONFIG);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);

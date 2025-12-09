@@ -26,7 +26,21 @@ export interface SocialLink {
     url: string;
 }
 
-export interface InfoPageConfig {
+export interface EventItem {
+    id: string;
+    month: string;
+    day: string;
+    type: string;
+    title: string;
+    time: string;
+    location: string;
+    description: string;
+    buttonText: string;
+    typeColor: string; // CSS class string e.g. 'text-[#0bceff]'
+    url: string;
+}
+
+export interface AppConfig {
     profile: {
         name: string;
         bio: string;
@@ -36,9 +50,10 @@ export interface InfoPageConfig {
     socialLinks: SocialLink[];
     buttons: LinkButton[];
     sections: InfoSection[];
+    events: EventItem[];
 }
 
-export const DEFAULT_INFO_CONFIG: InfoPageConfig = {
+export const DEFAULT_APP_CONFIG: AppConfig = {
     profile: {
         name: "WeCreate",
         bio: "Building the future of work. \nAI Training & Community in South Florida.",
@@ -116,6 +131,47 @@ export const DEFAULT_INFO_CONFIG: InfoPageConfig = {
             title: 'Contact Support',
             content: 'Need specific help? Reach out directly.\n\ninfo@wecreatehub.com\n(315) 570-9317',
             icon: 'contact_support'
+        }
+    ],
+    events: [
+        {
+            id: 'evt1',
+            month: 'NOV',
+            day: '3',
+            type: 'COMMUNITY',
+            title: 'AI Office Hours',
+            time: '7:00 PM - 9:00 PM EST',
+            location: 'Virtual (via AI Foundry Skool)',
+            description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
+            buttonText: 'RSVP Today',
+            typeColor: 'text-[#0bceff]',
+            url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
+        },
+        {
+            id: 'evt2',
+            month: 'NOV',
+            day: '4',
+            type: 'WORKSHOP',
+            title: 'AI Exploration Labs',
+            time: '5:00 PM - 6:00 PM EST',
+            location: 'Virtual',
+            description: 'Explore, build, and collaborate with us as we embark on another adventure at AI Exploration Labs.',
+            buttonText: 'Register Now',
+            typeColor: 'text-blue-600',
+            url: 'https://luma.com/calendar/cal-ZJoLn2kvSHHzV7u',
+        },
+        {
+            id: 'evt3',
+            month: 'NOV',
+            day: '10',
+            type: 'COMMUNITY',
+            title: 'AI Office Hours',
+            time: '7:00 PM - 9:00 PM EST',
+            location: 'Virtual (via AI Foundry Skool)',
+            description: 'Come with your questions and connect with fellow builders, mentors, and partners from the AI tech scene. Share what you\'re working on, get feedback, and get your questions answered.',
+            buttonText: 'RSVP Today',
+            typeColor: 'text-[#0bceff]',
+            url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
         }
     ]
 };

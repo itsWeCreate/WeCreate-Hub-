@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LinkedInIcon, InstagramIcon } from './icons';
-import { InfoPageConfig, DEFAULT_INFO_CONFIG } from '../src/types';
+import { AppConfig, DEFAULT_APP_CONFIG } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 // Reusable Link Card Component
@@ -150,7 +150,7 @@ const InfoCard = ({ icon, title, content }: { icon: string, title: string, conte
 
 const InfoPage: React.FC = () => {
     const navigate = useNavigate();
-    const [config, setConfig] = useState<InfoPageConfig>(DEFAULT_INFO_CONFIG);
+    const [config, setConfig] = useState<AppConfig>(DEFAULT_APP_CONFIG);
     const [loading, setLoading] = useState(true);
     const [showResources, setShowResources] = useState(false);
 
