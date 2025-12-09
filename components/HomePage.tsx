@@ -1,11 +1,14 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import HomePopup from './HomePopup';
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
 
     return (
         <>
+            <HomePopup />
             {/* Hero Section */}
             <section className="relative hero-gradient text-white min-h-[60vh] md:min-h-[70vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
                 <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{backgroundImage: "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop')"}}></div>

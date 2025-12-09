@@ -148,7 +148,7 @@ const InfoCard = ({ icon, title, content }: { icon: string, title: string, conte
     );
 }
 
-// Gate Component
+// Gate Component - Now a Transparent Modal Overlay
 const InfoGate = ({ onUnlock }: { onUnlock: () => void }) => {
     const [formData, setFormData] = useState({ name: '', email: '', whereWeMet: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -189,56 +189,63 @@ const InfoGate = ({ onUnlock }: { onUnlock: () => void }) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] p-4">
-            <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100 animate-fade-in-up">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-md transition-all duration-500 animate-fade-in">
+            <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-gray-100 ring-1 ring-black/5 transform transition-all scale-100">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-50 text-primary mb-4">
-                        <span className="material-symbols-outlined text-3xl">lock_open</span>
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-primary-light to-secondary-light text-primary mb-4 shadow-sm">
+                        <span className="material-symbols-outlined text-3xl">handshake</span>
                     </div>
-                    <h1 className="text-3xl font-heading font-bold text-gray-900 mb-2">Welcome!</h1>
-                    <p className="text-gray-500">Please share your details to access our resources and links.</p>
+                    <h1 className="text-2xl font-heading font-bold text-gray-900 mb-2">Welcome to the Ecosystem</h1>
+                    <p className="text-gray-500 text-sm leading-relaxed">
+                        We are building the future of work together. Connect with us to access our curated resources and stay in the loop.
+                    </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Full Name</label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Full Name</label>
                         <input 
                             type="text" 
                             required
                             value={formData.name}
                             onChange={e => setFormData({...formData, name: e.target.value})}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50/50 focus:bg-white text-gray-800 placeholder-gray-400"
                             placeholder="Your Name"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Email Address</label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Email Address</label>
                         <input 
                             type="email" 
                             required
                             value={formData.email}
                             onChange={e => setFormData({...formData, email: e.target.value})}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50/50 focus:bg-white text-gray-800 placeholder-gray-400"
                             placeholder="you@example.com"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Where did we meet? <span className="text-gray-400 font-normal">(Optional)</span></label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Where did we meet? <span className="font-normal text-gray-400 normal-case">(Optional)</span></label>
                         <input 
                             type="text" 
                             value={formData.whereWeMet}
                             onChange={e => setFormData({...formData, whereWeMet: e.target.value})}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
-                            placeholder="e.g., Tech Event, LinkedIn..."
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50/50 focus:bg-white text-gray-800 placeholder-gray-400"
+                            placeholder="e.g., Event, LinkedIn..."
                         />
                     </div>
                     
                     <button 
                         type="submit" 
                         disabled={isSubmitting}
-                        className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold py-4 rounded-xl shadow-soft shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                        className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold py-3.5 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"
                     >
-                        {isSubmitting ? 'Unlocking...' : 'Continue to Links'}
+                        {isSubmitting ? (
+                            <>
+                                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                Joining...
+                            </>
+                        ) : 'Get Access'}
                     </button>
                 </form>
             </div>
@@ -255,12 +262,9 @@ const InfoPage: React.FC = () => {
 
     useEffect(() => {
         // Smart Gating Check
-        // 1. Check if they passed this specific gate previously
         const gatePassedLocal = localStorage.getItem('infoPageGatePassed');
         const gatePassedSession = sessionStorage.getItem('infoPageGatePassed');
         
-        // 2. Check if they have filled out other forms on the site (Programs or Partnership)
-        // If they have, we already have their info, so we shouldn't ask again.
         const hasProgramInterest = localStorage.getItem('programNotifications');
         const hasPartnershipInquiry = localStorage.getItem('partnershipInquiries');
         
@@ -324,11 +328,6 @@ const InfoPage: React.FC = () => {
         }
     };
 
-    // Render Gate if not yet passed
-    if (!isGateOpen) {
-        return <InfoGate onUnlock={() => setIsGateOpen(true)} />;
-    }
-
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background-light pt-20">
@@ -340,9 +339,13 @@ const InfoPage: React.FC = () => {
     const { profile, buttons, sections, socialLinks } = config;
 
     return (
-        <div className="bg-[#FAFAFA] min-h-screen pt-32 pb-24">
+        <div className="bg-[#FAFAFA] min-h-screen pt-32 pb-24 relative">
+            
+            {/* Modal Overlay if Gate is Closed */}
+            {!isGateOpen && <InfoGate onUnlock={() => setIsGateOpen(true)} />}
+
             {/* Increased max-width from xl to 3xl for more breathing room */}
-            <div className="max-w-3xl mx-auto px-5 sm:px-8">
+            <div className={`max-w-3xl mx-auto px-5 sm:px-8 transition-all duration-500 ${!isGateOpen ? 'blur-sm opacity-80 pointer-events-none' : ''}`}>
 
                 {/* Profile Section */}
                 <div className="flex flex-col items-center text-center mb-12 animate-fade-in-up">
