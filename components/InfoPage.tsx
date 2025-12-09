@@ -148,13 +148,134 @@ const InfoCard = ({ icon, title, content }: { icon: string, title: string, conte
     );
 }
 
+// Gate Component
+const InfoGate = ({ onUnlock }: { onUnlock: () => void }) => {
+    const [formData, setFormData] = useState({ name: '', email: '', whereWeMet: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const submissionData = {
+            fullName: formData.name,
+            email: formData.email,
+            message: `Where we met: ${formData.whereWeMet || 'Not specified'}`, // Mapping to 'Message' column in typical sheet
+            partnershipType: 'Lead Capture', // Distinguish this entry
+            formType: 'leadCapture' // Hint for backend script
+        };
+
+        try {
+            // Save to localStorage for persistence (permanent until cleared)
+            localStorage.setItem('infoPageGatePassed', 'true');
+            localStorage.setItem('userInfo', JSON.stringify(submissionData));
+            
+            // Also save to sessionStorage (current session) just in case
+            sessionStorage.setItem('infoPageGatePassed', 'true');
+
+            if (GOOGLE_SHEET_WEB_APP_URL) {
+                await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(submissionData),
+                });
+            }
+        } catch (error) {
+            console.error("Submission error", error);
+        } finally {
+            setIsSubmitting(false);
+            onUnlock();
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] p-4">
+            <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100 animate-fade-in-up">
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-50 text-primary mb-4">
+                        <span className="material-symbols-outlined text-3xl">lock_open</span>
+                    </div>
+                    <h1 className="text-3xl font-heading font-bold text-gray-900 mb-2">Welcome!</h1>
+                    <p className="text-gray-500">Please share your details to access our resources and links.</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Full Name</label>
+                        <input 
+                            type="text" 
+                            required
+                            value={formData.name}
+                            onChange={e => setFormData({...formData, name: e.target.value})}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
+                            placeholder="Your Name"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Email Address</label>
+                        <input 
+                            type="email" 
+                            required
+                            value={formData.email}
+                            onChange={e => setFormData({...formData, email: e.target.value})}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Where did we meet? <span className="text-gray-400 font-normal">(Optional)</span></label>
+                        <input 
+                            type="text" 
+                            value={formData.whereWeMet}
+                            onChange={e => setFormData({...formData, whereWeMet: e.target.value})}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-gray-50 focus:bg-white"
+                            placeholder="e.g., Tech Event, LinkedIn..."
+                        />
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold py-4 rounded-xl shadow-soft shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                    >
+                        {isSubmitting ? 'Unlocking...' : 'Continue to Links'}
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 const InfoPage: React.FC = () => {
     const navigate = useNavigate();
     const [config, setConfig] = useState<AppConfig>(DEFAULT_APP_CONFIG);
     const [loading, setLoading] = useState(true);
     const [showResources, setShowResources] = useState(false);
+    const [isGateOpen, setIsGateOpen] = useState(false);
 
     useEffect(() => {
+        // Smart Gating Check
+        // 1. Check if they passed this specific gate previously
+        const gatePassedLocal = localStorage.getItem('infoPageGatePassed');
+        const gatePassedSession = sessionStorage.getItem('infoPageGatePassed');
+        
+        // 2. Check if they have filled out other forms on the site (Programs or Partnership)
+        // If they have, we already have their info, so we shouldn't ask again.
+        const hasProgramInterest = localStorage.getItem('programNotifications');
+        const hasPartnershipInquiry = localStorage.getItem('partnershipInquiries');
+        
+        let hasPriorEngagement = false;
+        try {
+            if (hasProgramInterest && JSON.parse(hasProgramInterest).length > 0) hasPriorEngagement = true;
+            if (hasPartnershipInquiry && JSON.parse(hasPartnershipInquiry).length > 0) hasPriorEngagement = true;
+        } catch (e) {
+            // Ignore parse errors
+        }
+
+        if (gatePassedLocal === 'true' || gatePassedSession === 'true' || hasPriorEngagement) {
+            setIsGateOpen(true);
+        }
+
         const fetchConfig = async () => {
             if (!GOOGLE_SHEET_WEB_APP_URL) {
                 setLoading(false);
@@ -202,6 +323,11 @@ const InfoPage: React.FC = () => {
             navigate(url);
         }
     };
+
+    // Render Gate if not yet passed
+    if (!isGateOpen) {
+        return <InfoGate onUnlock={() => setIsGateOpen(true)} />;
+    }
 
     if (loading) {
         return (
