@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Header';
@@ -7,6 +8,7 @@ import AboutPage from './components/AboutPage';
 import ProgramsPage from './components/ProgramsPage';
 import EventsPage from './components/EventsPage';
 import PartnershipPage from './components/PartnershipPage';
+import ContactPage from './components/ContactPage';
 import PartnershipModal from './components/PartnershipModal';
 import AdminPage from './components/AdminPage';
 import PasswordPage from './components/PasswordPage';
@@ -83,6 +85,7 @@ const App: React.FC = () => {
                     <Route path="/programs" element={<ProgramsPage {...modalProps} onSuccess={showToast} />} />
                     <Route path="/events" element={<EventsPage {...modalProps} />} />
                     <Route path="/partnership" element={<PartnershipPage {...modalProps} />} />
+                    <Route path="/contact" element={<ContactPage onSuccess={showToast} />} />
                     <Route path="/info" element={<InfoPage />} />
                     <Route 
                         path="/admin" 

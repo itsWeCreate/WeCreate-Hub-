@@ -23,6 +23,9 @@ const HomePage: React.FC = () => {
                         <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto relative z-20">
                             Start Your Journey
                         </button>
+                        <button onClick={() => navigate('/contact')} className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 w-full sm:w-auto relative z-20">
+                            Get in Touch
+                        </button>
                     </div>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background-light to-transparent pointer-events-none"></div>
@@ -77,6 +80,26 @@ const HomePage: React.FC = () => {
                         </div>
                         <div className="mt-10 lg:mt-0 relative">
                             <img alt="Diverse group of young professionals collaborating in a bright, modern workshop" className="rounded-xl shadow-soft w-full h-full object-cover" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Direct Contact CTA Section - NEW */}
+            <section className="py-20 bg-slate-50 border-y border-border-light">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 bg-white p-8 md:p-12 rounded-3xl shadow-soft">
+                        <div className="text-center md:text-left">
+                            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-heading-light">Have more questions?</h2>
+                            <p className="text-text-body-light mt-2 text-lg">Our team is here to help you navigate your AI journey.</p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                            <button onClick={() => navigate('/contact')} className="bg-primary hover:bg-primary-hover text-white font-heading font-bold py-4 px-10 rounded-xl shadow-lg transition-all transform hover:scale-105">
+                                Contact Us Directly
+                            </button>
+                            <a href="mailto:info@wecreatehub.com" className="bg-slate-100 hover:bg-slate-200 text-text-heading-light font-heading font-bold py-4 px-10 rounded-xl transition-all text-center">
+                                Send Email
+                            </a>
                         </div>
                     </div>
                 </div>

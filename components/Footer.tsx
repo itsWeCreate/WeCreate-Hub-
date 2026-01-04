@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LinkedInIcon, InstagramIcon } from './icons';
@@ -22,6 +23,7 @@ const Footer: React.FC = () => {
                             <li><Link to="/about" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</Link></li>
                             <li><Link to="/programs" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</Link></li>
                             <li><Link to="/events" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Events</Link></li>
+                            <li><Link to="/contact" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Contact</Link></li>
                             <li><Link to="/info" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Info</Link></li>
                              <li><Link to="/admin" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Admin</Link></li>
                         </ul>

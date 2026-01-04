@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -6,8 +7,7 @@ const Header: React.FC = () => {
     const location = useLocation();
 
     // Determine if we should use light theme (dark text) based on the route
-    // About (/about), Admin (/admin), and Info (/info) pages typically have light backgrounds at the top
-    const isLightTheme = ['/about', '/admin', '/info'].includes(location.pathname);
+    const isLightTheme = ['/about', '/admin', '/info', '/contact'].includes(location.pathname);
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -26,6 +26,7 @@ const Header: React.FC = () => {
         { name: 'Programs', path: '/programs' },
         { name: 'Events', path: '/events' },
         { name: 'Partnership', path: '/partnership' },
+        { name: 'Contact', path: '/contact' },
     ];
 
     const mobileMenuIconColor = isLightTheme ? 'text-text-heading-light' : 'text-white';

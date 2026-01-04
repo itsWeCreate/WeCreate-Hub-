@@ -6,7 +6,19 @@ import { AppConfig, DEFAULT_APP_CONFIG } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 // Reusable Link Card Component
-const LinkCard = ({ 
+interface LinkCardProps {
+    icon: string;
+    title: string;
+    onClick: () => void;
+    subtext?: string;
+    image?: string;
+    fullWidth?: boolean;
+    price?: string;
+    ctaText?: string;
+}
+
+// Fix: Use React.FC to properly handle React internal props like 'key'
+const LinkCard: React.FC<LinkCardProps> = ({ 
     icon, 
     title, 
     onClick, 
@@ -15,15 +27,6 @@ const LinkCard = ({
     fullWidth,
     price,
     ctaText
-}: { 
-    icon: string, 
-    title: string, 
-    onClick: () => void, 
-    subtext?: string, 
-    image?: string, 
-    fullWidth?: boolean,
-    price?: string,
-    ctaText?: string
 }) => {
     // Determine if this is a "Rich Card" (Stan Store style) or a Simple Link
     const isRichCard = Boolean(ctaText || price || image);
@@ -116,7 +119,14 @@ const LinkCard = ({
 };
 
 // Expandable Content Card for policies/requirements
-const InfoCard = ({ icon, title, content }: { icon: string, title: string, content: string }) => {
+interface InfoCardProps {
+    icon: string;
+    title: string;
+    content: string;
+}
+
+// Fix: Use React.FC for InfoCard to handle 'key' prop correctly in TS
+const InfoCard: React.FC<InfoCardProps> = ({ icon, title, content }) => {
     const [isOpen, setIsOpen] = useState(false);
     
     // Convert newlines to breaks
