@@ -6,9 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => {
   loadEnv(mode, '.', '') 
   return {
-    // Set base to empty string or './' for relative paths, 
-    // essential for GitHub Pages subfolder deployment.
-    base: '',
+    // Set base to './' to ensure all asset paths are relative.
+    // This prevents blank pages when deploying to GitHub Pages subfolders.
+    base: './',
     server: { port: 3000, host: '0.0.0.0' },
     plugins: [
         react(),

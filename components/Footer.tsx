@@ -1,68 +1,127 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { LinkedInIcon, InstagramIcon } from './icons';
+const Header: React.FC = () => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const location = useLocation();
 
-const Footer: React.FC = () => {
+    // Determine if we should use light theme (dark text) based on the route
+    const isLightTheme = ['/about', '/admin', '/info', '/contact', '/optimize'].includes(location.pathname);
+
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isMobileMenuOpen]);
+
+    const navLinks = [
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Programs', path: '/programs' },
+        { name: 'Optimize', path: '/optimize' },
+        { name: 'Partnership', path: '/partnership' },
+        { name: 'Contact', path: '/contact' },
+    ];
+
+    const mobileMenuIconColor = isLightTheme ? 'text-text-heading-light' : 'text-white';
+    
+    // Helper to determine active state
+    const isActive = (path: string) => location.pathname === path;
+
     return (
-       <footer className="bg-slate-100">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="md:col-span-1">
-                        <Link to="/" className="text-3xl font-logo font-semibold text-text-heading-light">
-                           We<span className="text-[#0bceff]">Create</span>
+        <>
+            <header className="absolute top-0 left-0 right-0 z-30">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <nav className="flex items-center justify-between py-6">
+                        <Link to="/" className={`text-2xl md:text-[1.8rem] lg:text-[2rem] font-logo font-semibold transition-all duration-300 ${isLightTheme ? 'text-text-heading-light' : 'text-white'}`}>
+                            WeCreate
                         </Link>
-                        <p className="mt-4 text-text-body-light font-body">
-                            Building the future of work, together. Transform your career with South Florida's premier AI training community.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Quick Links</h3>
-                        <ul className="mt-4 space-y-3">
-                            <li><Link to="/" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Home</Link></li>
-                            <li><Link to="/about" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</Link></li>
-                            <li><Link to="/programs" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</Link></li>
-                            <li><Link to="/events" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Events</Link></li>
-                            <li><Link to="/contact" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Contact</Link></li>
-                            <li><Link to="/info" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Info</Link></li>
-                             <li><Link to="/admin" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Admin</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Contact</h3>
-                        <ul className="mt-4 space-y-3">
-                            <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">location_on</span>
-                                <span className="ml-2 text-text-body-light font-body">South Florida</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">mail</span>
-                                <span className="ml-2 text-text-body-light font-body">info@wecreatehub.com</span>
-                            </li>
-                             <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">call</span>
-                                <span className="ml-2 text-text-body-light font-body">(315) 570-9317</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Follow Us</h3>
-                        <div className="flex mt-4 space-x-4">
-                            <a href="https://www.linkedin.com/company/wecreate-enterprises" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
-                                <LinkedInIcon />
-                            </a>
-                            <a href="https://www.instagram.com/hello_wecreate/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
-                                <InstagramIcon />
-                            </a>
+                        <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    to={link.path}
+                                    className={`text-base lg:text-lg font-medium transition-all duration-300 ${
+                                        isActive(link.path)
+                                            ? 'text-[#00d9ff] font-bold'
+                                            : isLightTheme
+                                                ? 'text-text-heading-light hover:text-[#00d9ff] hover:font-bold'
+                                                : 'text-white hover:text-[#00d9ff] hover:font-bold'
+                                    }`}
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
                         </div>
+                        <div className="hidden md:block">
+                            <Link to="/programs" className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-2.5 lg:py-3 px-5 lg:px-6 rounded-lg transition-all duration-300 shadow-mild text-sm lg:text-base">
+                                Get Started
+                            </Link>
+                        </div>
+                        <div className="md:hidden">
+                            <button
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className={mobileMenuIconColor}
+                                aria-label="Open menu"
+                            >
+                                <span className="material-symbols-outlined text-4xl">menu</span>
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+
+            {/* Mobile Menu Overlay */}
+            <div 
+                aria-hidden="true"
+                className={`fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+
+            {/* Mobile Menu Panel */}
+            <aside 
+                className={`fixed top-0 right-0 bottom-0 z-50 bg-background-light w-full max-w-sm transform transition-transform duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-menu-title"
+            >
+                <div className="p-6 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-12">
+                         <Link id="mobile-menu-title" to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-[2.3rem] font-logo font-semibold text-text-heading-light">
+                            We<span className="text-[#0bceff]">Create</span>
+                        </Link>
+                        <button onClick={() => setIsMobileMenuOpen(false)} className="text-text-heading-light" aria-label="Close menu">
+                            <span className="material-symbols-outlined text-4xl">close</span>
+                        </button>
+                    </div>
+                    <nav className="flex flex-col items-center justify-center flex-grow space-y-8">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`text-3xl font-heading font-medium transition-colors duration-300 ${
+                                    isActive(link.path) ? 'text-primary' : 'text-text-heading-light hover:text-primary'
+                                }`}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                    </nav>
+                    <div className="mt-8 text-center">
+                        <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-10 rounded-lg transition-all duration-300 shadow-mild text-xl w-full inline-block">
+                            Get Started
+                        </Link>
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t border-border-light text-center text-text-body-light">
-                    <p>&copy; {new Date().getFullYear()} WeCreate. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
+            </aside>
+        </>
     );
 };
 
-export default Footer;
+export default Header;

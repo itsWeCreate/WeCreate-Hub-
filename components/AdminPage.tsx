@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import InfoPageEditor from './InfoPageEditor';
 import EventsEditor from './EventsEditor';
@@ -30,7 +29,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     }, []);
 
     const handleClearInquiries = () => {
-        if (window.confirm('Are you sure you want to delete all inquiries? This action cannot be undone.')) {
+        if (window.confirm('Are you sur you want to delete all inquiries? This action cannot be undone.')) {
             localStorage.removeItem('partnershipInquiries');
             setInquiries([]);
         }

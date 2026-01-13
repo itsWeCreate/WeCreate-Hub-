@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { AppConfig, DEFAULT_APP_CONFIG, LinkButton, InfoSection } from '../src/types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
@@ -27,7 +26,7 @@ const InfoPageEditor: React.FC = () => {
                 try {
                     const data = JSON.parse(text);
                     if (data && data.profile) {
-                        // Ensure defaults for new fields like fullWidth .
+                        // Ensure defaults for new fields like fullWidth
                         const buttonsWithDefaults = (data.buttons || []).map((b: any) => ({
                             ...b,
                             fullWidth: b.fullWidth !== undefined ? b.fullWidth : true
