@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ const Header: React.FC = () => {
     const location = useLocation();
 
     // Determine if we should use light theme (dark text) based on the route
-    const isLightTheme = ['/about', '/admin', '/info', '/contact'].includes(location.pathname);
+    const isLightTheme = ['/about', '/admin', '/info', '/contact', '/optimize'].includes(location.pathname);
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -24,7 +23,7 @@ const Header: React.FC = () => {
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
         { name: 'Programs', path: '/programs' },
-        { name: 'Events', path: '/events' },
+        { name: 'Optimize', path: '/optimize' },
         { name: 'Partnership', path: '/partnership' },
         { name: 'Contact', path: '/contact' },
     ];
@@ -39,15 +38,15 @@ const Header: React.FC = () => {
             <header className="absolute top-0 left-0 right-0 z-30">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <nav className="flex items-center justify-between py-6">
-                        <Link to="/" className={`text-[2.3rem] font-logo font-semibold ${isLightTheme ? 'text-text-heading-light' : 'text-white'}`}>
+                        <Link to="/" className={`text-2xl md:text-[1.8rem] lg:text-[2rem] font-logo font-semibold transition-all duration-300 ${isLightTheme ? 'text-text-heading-light' : 'text-white'}`}>
                             WeCreate
                         </Link>
-                        <div className="hidden md:flex items-center space-x-8">
+                        <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
                                     to={link.path}
-                                    className={`text-xl font-medium transition-all duration-300 ${
+                                    className={`text-base lg:text-lg font-medium transition-all duration-300 ${
                                         isActive(link.path)
                                             ? 'text-[#00d9ff] font-bold'
                                             : isLightTheme
@@ -59,9 +58,11 @@ const Header: React.FC = () => {
                                 </Link>
                             ))}
                         </div>
-                        <Link to="/programs" className="hidden md:block bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-mild">
-                            Get Started
-                        </Link>
+                        <div className="hidden md:block">
+                            <Link to="/programs" className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-2.5 lg:py-3 px-5 lg:px-6 rounded-lg transition-all duration-300 shadow-mild text-sm lg:text-base">
+                                Get Started
+                            </Link>
+                        </div>
                         <div className="md:hidden">
                             <button
                                 onClick={() => setIsMobileMenuOpen(true)}
