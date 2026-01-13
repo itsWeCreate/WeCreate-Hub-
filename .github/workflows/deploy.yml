@@ -27,9 +27,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # If you don't have a lockfile, keep npm install.
-      # If you add package-lock.json, you can switch to `npm ci`.
-      - name: Install deps
+      - name: Install dependencies
         run: npm install
 
       - name: Build
