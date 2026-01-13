@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 const OptimizePage: React.FC = () => {
-    const BOOK_CHECKUP_URL = "https://buy.stripe.com/example_checkup";
-    const BOOK_ANALYSIS_URL = "https://buy.stripe.com/example_analysis";
+    const BOOK_CHECKUP_URL = "https://book.stripe.com/eVqbJ031G0aofEPbyxd7q01";
+    const BOOK_ANALYSIS_URL = "https://book.stripe.com/eVq8wOgSw7CQ3W7byxd7q02";
 
     const [isQuizOpen, setIsQuizOpen] = useState(false);
     const [quizStep, setQuizStep] = useState(0); // 0=Intro, 1-5=Q, 6=Lead, 7=Results
