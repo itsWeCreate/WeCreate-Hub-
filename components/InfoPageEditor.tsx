@@ -27,7 +27,7 @@ const InfoPageEditor: React.FC = () => {
                 try {
                     const data = JSON.parse(text);
                     if (data && data.profile) {
-                        // Ensure defaults for new fields like fullWidth
+                        // Ensure defaults for new fields like fullWidth .
                         const buttonsWithDefaults = (data.buttons || []).map((b: any) => ({
                             ...b,
                             fullWidth: b.fullWidth !== undefined ? b.fullWidth : true
