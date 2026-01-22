@@ -61,7 +61,7 @@ const OptimizePage: React.FC = () => {
         const quizSummary = selections.map((s, i) => `Q${i+1}: ${quizQuestions[i].q}\nAnswer: ${quizQuestions[i].options[s]}`).join('\n\n');
         
         // Create a personalized email draft for the Google Sheet
-        const emailDraft = `Hi ${userData.name},\n\nGreat connecting! Based on your AI Snapshot results, your primary hurdle is ${diagnosis.title} (${diagnosis.category}).\n\n${diagnosis.description}\n\nOur next move is an AI Checkup ($150) to build the logical architecture required to fix this specific bottleneck. You can book that session here: ${BOOK_CHECKUP_URL}\n\nLooking forward to it!\n\n--- FOR YOUR REFERENCE (QUIZ DATA) ---\n${quizSummary}`;
+        const emailDraft = `Hi ${userData.name},\n\nGreat connecting! Based on your AI Snapshot results, your primary hurdle is ${diagnosis.title} (${diagnosis.category}).\n\n${diagnosis.description}\n\nOur next move is an AI Checkup ($300) to build the logical architecture required to fix this specific bottleneck. You can book that session here: ${BOOK_CHECKUP_URL}\n\nLooking forward to it!\n\n--- FOR YOUR REFERENCE (QUIZ DATA) ---\n${quizSummary}`;
 
         const submissionData = {
             fullName: userData.name,
@@ -164,7 +164,7 @@ const OptimizePage: React.FC = () => {
                             onClick={() => handleBooking(BOOK_CHECKUP_URL)}
                             className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white text-xl font-heading font-bold py-7 px-14 rounded-[2rem] shadow-[0_20px_50px_rgba(147,51,234,0.3)] transition-all transform hover:scale-[1.03] active:scale-95"
                         >
-                            Book the AI Checkup ($150)
+                            Book the AI Checkup ($300)
                         </button>
                         <button 
                             onClick={() => setIsQuizOpen(true)}
@@ -247,7 +247,7 @@ const OptimizePage: React.FC = () => {
                                     <h2 className="text-4xl md:text-5xl font-heading font-bold text-slate-900">Offer 01: AI Checkup</h2>
                                     <p className="text-xl text-slate-500 mt-2">A focused 45-minute diagnostic session.</p>
                                 </div>
-                                <div className="text-5xl font-heading font-bold text-primary">$150</div>
+                                <div className="text-5xl font-heading font-bold text-primary">$300</div>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-16 mb-16">
@@ -286,7 +286,7 @@ const OptimizePage: React.FC = () => {
                                 onClick={() => handleBooking(BOOK_CHECKUP_URL)}
                                 className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold py-7 rounded-[2rem] text-2xl shadow-xl transition-all transform hover:scale-[1.01]"
                             >
-                                Book the AI Checkup ($150)
+                                Book the AI Checkup
                             </button>
                         </div>
                     </div>
@@ -300,7 +300,7 @@ const OptimizePage: React.FC = () => {
                         <div className="bg-slate-900 p-16 text-white text-center">
                             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-2">Offer 02: Process Analysis</h2>
                             <p className="text-xl text-white/60">A deep audit of your business workflows.</p>
-                            <div className="mt-6 text-5xl font-heading font-bold">$500</div>
+                            <div className="mt-6 text-5xl font-heading font-bold">$1000</div>
                         </div>
                         <div className="p-12 md:p-20">
                             <p className="text-2xl text-slate-600 mb-14 text-center leading-relaxed">
@@ -338,7 +338,7 @@ const OptimizePage: React.FC = () => {
                                 onClick={() => handleBooking(BOOK_ANALYSIS_URL)}
                                 className="w-full bg-secondary hover:bg-blue-600 text-white font-heading font-bold py-7 rounded-[2rem] text-2xl shadow-xl transition-all transform hover:scale-[1.01]"
                             >
-                                Book a Process Analysis ($500)
+                                Book a Process Analysis
                             </button>
                         </div>
                     </div>
@@ -405,7 +405,7 @@ const OptimizePage: React.FC = () => {
                         onClick={() => handleBooking(BOOK_CHECKUP_URL)}
                         className="w-full bg-primary hover:bg-primary-hover text-white text-2xl font-heading font-bold py-8 px-16 rounded-[2.5rem] shadow-[0_30px_70px_rgba(147,51,234,0.3)] transition-all transform hover:translate-y-[-6px]"
                     >
-                        Book the AI Checkup ($150)
+                        Book the AI Checkup ($300)
                     </button>
                     <div className="mt-12 flex items-center justify-center gap-10 text-slate-400 text-lg font-medium">
                         <span className="flex items-center gap-2"><span className="material-symbols-outlined text-2xl">videocam</span> Zoom Session</span>
@@ -504,7 +504,7 @@ const OptimizePage: React.FC = () => {
                                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 text-primary rounded-full text-xs font-bold mb-4 uppercase tracking-widest">
                                             Prescribed Next Step
                                         </div>
-                                        <h3 className="text-3xl font-heading font-bold text-slate-900 mb-4">AI Checkup — $150</h3>
+                                        <h3 className="text-3xl font-heading font-bold text-slate-900 mb-4">AI Checkup — $300</h3>
                                         <p className="text-slate-500 mb-10 leading-relaxed max-w-md mx-auto text-lg">A professional 1-on-1 session to isolate the specific workflow logic required to fix your {diagnosis.title.toLowerCase()}.</p>
                                         <button 
                                             onClick={() => handleBooking(BOOK_CHECKUP_URL)} 
