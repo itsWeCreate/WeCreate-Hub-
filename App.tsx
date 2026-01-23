@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
@@ -21,9 +22,23 @@ export type OpenModalFunction = () => void;
 
 const App: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isPartnershipModalOpen, setIsPartnershipModalOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    // Keyboard shortcut for Admin (Supports Alt/Option + Shift + A or Cmd + Shift + A)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const isAdminShortcut = (e.altKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a';
+            if (isAdminShortcut) {
+                e.preventDefault();
+                navigate('/admin');
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [navigate]);
 
     useEffect(() => {
         if (location.hash) {

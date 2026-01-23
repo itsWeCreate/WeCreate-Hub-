@@ -1,3 +1,4 @@
+
 export interface LinkButton {
     id: string;
     title: string;
@@ -39,6 +40,15 @@ export interface EventItem {
     url: string;
 }
 
+export interface SocialPost {
+    id: string;
+    title: string;
+    videoUrl: string; 
+    link: string;
+    type: string;
+    thumbnail: string;
+}
+
 export interface AppConfig {
     profile: {
         name: string;
@@ -50,6 +60,7 @@ export interface AppConfig {
     buttons: LinkButton[];
     sections: InfoSection[];
     events: EventItem[];
+    socialGallery: SocialPost[];
 }
 
 export const DEFAULT_APP_CONFIG: AppConfig = {
@@ -171,6 +182,40 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
             buttonText: 'RSVP Today',
             typeColor: 'text-[#0bceff]',
             url: 'https://www.skool.com/builder-hub-by-wecreate-7670',
+        }
+    ],
+    socialGallery: [
+        { 
+            id: 's1', 
+            title: "Studio Flow", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-working-at-a-creative-office-9033-large.mp4", 
+            link: "https://www.instagram.com/hello_wecreate/",
+            thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2670&auto=format&fit=crop",
+            type: "Studio Life"
+        },
+        { 
+            id: 's2', 
+            title: "AI Workshop", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-laptop-34440-large.mp4", 
+            link: "https://ailaunch.netlify.app/",
+            thumbnail: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=2670&auto=format&fit=crop",
+            type: "Education"
+        },
+        { 
+            id: 's3', 
+            title: "Build Sprints", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-man-working-on-his-laptop-at-home-42472-large.mp4",
+            link: "https://www.linkedin.com/company/wecreate-enterprises",
+            thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop",
+            type: "Community"
+        },
+        { 
+            id: 's4', 
+            title: "Future Labs", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-34442-large.mp4",
+            link: "/services",
+            thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2670&auto=format&fit=crop",
+            type: "Innovation"
         }
     ]
 };

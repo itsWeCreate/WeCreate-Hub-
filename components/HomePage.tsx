@@ -1,19 +1,43 @@
-import React, { useRef, useState } from 'react';
+
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HomePopup from './HomePopup';
-import { LEARNING_URL } from '../config';
-
-interface SocialPost {
-    id: number;
-    title: string;
-    videoUrl: string; 
-    link: string; // The URL to visit when the tile is clicked
-    type: string;
-    thumbnail: string;
-}
+import { LEARNING_URL, GOOGLE_SHEET_WEB_APP_URL } from '../config';
+import { AppConfig, DEFAULT_APP_CONFIG, SocialPost } from '../types';
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
+    const [socialFeed, setSocialFeed] = useState<SocialPost[]>(DEFAULT_APP_CONFIG.socialGallery);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchConfig = async () => {
+            if (!GOOGLE_SHEET_WEB_APP_URL) {
+                setIsLoading(false);
+                return;
+            }
+            try {
+                const response = await fetch(`${GOOGLE_SHEET_WEB_APP_URL}?action=getConfig`);
+                if (response.ok) {
+                    const text = await response.text();
+                    try {
+                        const data = JSON.parse(text);
+                        if (data && data.socialGallery) {
+                            setSocialFeed(data.socialGallery);
+                        }
+                    } catch (e) {
+                         console.warn("Received non-JSON response, using defaults.");
+                    }
+                }
+            } catch (error) {
+                console.warn("Failed to load dynamic social gallery, using default.", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchConfig();
+    }, []);
 
     const scrollToPath = () => {
         const element = document.getElementById('whats-your-path');
@@ -23,6 +47,7 @@ const HomePage: React.FC = () => {
     };
 
     const getDirectVideoLink = (url: string) => {
+        if (!url) return '';
         if (url.includes('drive.google.com')) {
             const match = url.match(/\/d\/([^/]+)/);
             if (match && match[1]) {
@@ -31,49 +56,6 @@ const HomePage: React.FC = () => {
         }
         return url;
     };
-
-    const socialFeed: SocialPost[] = [
-        { 
-            id: 1, 
-            title: "Studio Flow", 
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-working-at-a-creative-office-9033-large.mp4", 
-            link: "https://www.instagram.com/hello_wecreate/",
-            thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2670&auto=format&fit=crop",
-            type: "Studio Life"
-        },
-        { 
-            id: 2, 
-            title: "AI Workshop", 
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-laptop-34440-large.mp4", 
-            link: "https://ailaunch.netlify.app/",
-            thumbnail: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=2670&auto=format&fit=crop",
-            type: "Education"
-        },
-        { 
-            id: 3, 
-            title: "Build Sprints", 
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-man-working-on-his-laptop-at-home-42472-large.mp4",
-            link: "https://www.linkedin.com/company/wecreate-enterprises",
-            thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop",
-            type: "Community"
-        },
-        { 
-            id: 4, 
-            title: "Future Labs", 
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-34442-large.mp4",
-            link: "/services",
-            thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2670&auto=format&fit=crop",
-            type: "Innovation"
-        },
-        { 
-            id: 5, 
-            title: "Team Growth", 
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-working-at-a-creative-office-9033-large.mp4",
-            link: "/contact",
-            thumbnail: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2670&auto=format&fit=crop",
-            type: "Builders"
-        }
-    ];
 
     return (
         <div className="relative min-h-screen flex flex-col font-body antialiased bg-white overflow-x-hidden">
@@ -148,10 +130,16 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
                     
-                    <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto pb-8 md:pb-0 px-4 sm:px-6 lg:px-8 no-scrollbar scroll-smooth snap-x">
-                        {socialFeed.map((post) => (
-                            <SocialVideoCard key={post.id} post={post} convertLink={getDirectVideoLink} navigate={navigate} />
-                        ))}
+                    <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-x-auto pb-8 md:pb-0 px-4 sm:px-6 lg:px-8 no-scrollbar scroll-smooth snap-x">
+                        {isLoading ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <div key={i} className="flex-shrink-0 w-[240px] md:w-full aspect-[9/16] rounded-[2rem] bg-gray-100 animate-pulse" />
+                            ))
+                        ) : (
+                            socialFeed.map((post) => (
+                                <SocialVideoCard key={post.id} post={post} convertLink={getDirectVideoLink} navigate={navigate} />
+                            ))
+                        )}
                     </div>
                 </section>
 
@@ -172,6 +160,7 @@ const HomePage: React.FC = () => {
 const SocialVideoCard: React.FC<{ post: SocialPost; convertLink: (url: string) => string; navigate: (p: string) => void }> = ({ post, convertLink, navigate }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -187,7 +176,15 @@ const SocialVideoCard: React.FC<{ post: SocialPost; convertLink: (url: string) =
         }
     };
 
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            const currentProgress = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+            setProgress(currentProgress);
+        }
+    };
+
     const handleClick = () => {
+        if (!post.link || post.link === '#') return;
         if (post.link.startsWith('http')) {
             window.open(post.link, '_blank');
         } else {
@@ -204,27 +201,45 @@ const SocialVideoCard: React.FC<{ post: SocialPost; convertLink: (url: string) =
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
         >
-            <video 
-                ref={videoRef}
-                src={directUrl}
-                poster={post.thumbnail}
-                className={`w-full h-full object-cover transition-all duration-700 ${isHovered ? 'opacity-100 scale-105' : 'opacity-60 scale-100'}`}
-                muted
-                loop
-                playsInline
-            />
+            {post.videoUrl ? (
+                <video 
+                    ref={videoRef}
+                    src={directUrl}
+                    poster={post.thumbnail}
+                    className={`w-full h-full object-cover transition-all duration-700 ${isHovered ? 'opacity-100 scale-105' : 'opacity-60 scale-100'}`}
+                    muted
+                    loop
+                    playsInline
+                    onTimeUpdate={handleTimeUpdate}
+                />
+            ) : (
+                <img src={post.thumbnail} className="w-full h-full object-cover opacity-60" alt="" />
+            )}
             
-            <div className={`absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent p-8 flex flex-col justify-end transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+            {/* Gradient Overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent p-8 flex flex-col justify-end transition-opacity duration-300 ${isHovered ? 'opacity-40' : 'opacity-100'}`}>
                 <span className="text-white text-[10px] font-bold uppercase tracking-widest mb-1 font-heading opacity-80">{post.type}</span>
                 <p className="text-white font-heading font-bold text-xl leading-tight">{post.title}</p>
             </div>
 
-            <div className={`absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 transition-all duration-300 ${isHovered ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}>
-                <span className="material-symbols-outlined text-white text-2xl">play_arrow</span>
+            {/* Center Play Icon (Hidden on Hover) */}
+            <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${isHovered ? 'scale-150 opacity-0' : 'scale-100 opacity-100'}`}>
+                <div className="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
+                    <span className="material-symbols-outlined text-white text-3xl">play_arrow</span>
+                </div>
             </div>
             
-            <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/10">
-                <div className={`h-full bg-primary transition-all duration-[8000ms] linear ${isHovered ? 'w-full' : 'w-0'}`} />
+            {/* Dynamic Progress Bar */}
+            <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/10 overflow-hidden">
+                <div 
+                    className="h-full bg-primary transition-all duration-100 ease-linear shadow-[0_0_15px_rgba(147,51,234,0.8)]" 
+                    style={{ width: `${isHovered ? progress : 0}%` }}
+                />
+            </div>
+
+            {/* Mobile Helper Text */}
+            <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full md:hidden">
+                <p className="text-white text-[9px] font-bold uppercase tracking-widest">Tap to View</p>
             </div>
         </div>
     );
