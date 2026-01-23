@@ -92,7 +92,7 @@ const HomePage: React.FC = () => {
                     <div className="grid lg:grid-cols-2 gap-10 max-w-7xl mx-auto px-4">
                         <button onClick={() => window.open(LEARNING_URL, '_blank')} className="group relative block rounded-[2.5rem] overflow-hidden bg-primary shadow-soft hover:shadow-hover transition-all duration-500 h-[500px] text-left border-0">
                             <div className="absolute inset-0 z-0 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-50" />
+                                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-15" />
                                 <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-primary/70"></div>
                             </div>
                             <div className="h-full p-12 flex flex-col justify-between relative z-10">
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
                         </button>
                         <button onClick={() => navigate('/services')} className="group relative block rounded-[2.5rem] overflow-hidden bg-secondary shadow-soft hover:shadow-hover transition-all duration-500 h-[500px] text-left border-0">
                             <div className="absolute inset-0 z-0 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-50" />
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-15" />
                                 <div className="absolute inset-0 bg-gradient-to-br from-secondary/90 via-secondary/80 to-secondary/70"></div>
                             </div>
                             <div className="h-full p-12 flex flex-col justify-between relative z-10">
