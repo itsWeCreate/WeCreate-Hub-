@@ -173,7 +173,7 @@ const PartnershipPage: React.FC<PartnershipPageProps> = ({ onOpenPartnershipModa
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-4 text-text-body-light">
                                             <span className="material-symbols-outlined text-primary text-2xl font-bold">mail</span>
-                                            <span className="text-xl font-medium">partners@wecreatehub.com</span>
+                                            <span className="text-xl font-medium">info@wecreatehub.com</span>
                                         </div>
                                         <div className="flex items-center gap-4 text-text-body-light">
                                             <span className="material-symbols-outlined text-primary text-2xl font-bold">schedule</span>
