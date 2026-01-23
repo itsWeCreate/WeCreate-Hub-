@@ -1,149 +1,233 @@
-
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HomePopup from './HomePopup';
+import { LEARNING_URL } from '../config';
+
+interface SocialPost {
+    id: number;
+    title: string;
+    videoUrl: string; 
+    link: string; // The URL to visit when the tile is clicked
+    type: string;
+    thumbnail: string;
+}
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
 
+    const scrollToPath = () => {
+        const element = document.getElementById('whats-your-path');
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const getDirectVideoLink = (url: string) => {
+        if (url.includes('drive.google.com')) {
+            const match = url.match(/\/d\/([^/]+)/);
+            if (match && match[1]) {
+                return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+            }
+        }
+        return url;
+    };
+
+    const socialFeed: SocialPost[] = [
+        { 
+            id: 1, 
+            title: "Studio Flow", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-working-at-a-creative-office-9033-large.mp4", 
+            link: "https://www.instagram.com/hello_wecreate/",
+            thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2670&auto=format&fit=crop",
+            type: "Studio Life"
+        },
+        { 
+            id: 2, 
+            title: "AI Workshop", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-laptop-34440-large.mp4", 
+            link: "https://ailaunch.netlify.app/",
+            thumbnail: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=2670&auto=format&fit=crop",
+            type: "Education"
+        },
+        { 
+            id: 3, 
+            title: "Build Sprints", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-man-working-on-his-laptop-at-home-42472-large.mp4",
+            link: "https://www.linkedin.com/company/wecreate-enterprises",
+            thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop",
+            type: "Community"
+        },
+        { 
+            id: 4, 
+            title: "Future Labs", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-34442-large.mp4",
+            link: "/services",
+            thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2670&auto=format&fit=crop",
+            type: "Innovation"
+        },
+        { 
+            id: 5, 
+            title: "Team Growth", 
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-working-at-a-creative-office-9033-large.mp4",
+            link: "/contact",
+            thumbnail: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2670&auto=format&fit=crop",
+            type: "Builders"
+        }
+    ];
+
     return (
-        <>
+        <div className="relative min-h-screen flex flex-col font-body antialiased bg-white overflow-x-hidden">
             <HomePopup />
+            
             {/* Hero Section */}
-            <section className="relative hero-gradient text-white min-h-[60vh] md:min-h-[70vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
-                <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{backgroundImage: "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop')"}}></div>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="text-[2.85rem] md:text-7xl font-heading font-semibold leading-tight drop-shadow-sm text-white">
-                        Building the Future of Work, <br className="hidden md:block"/> Together
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMBuiBuH2z5jsP2txkQWhTU3iniR78utSOLpK2npyjgyR31yi9jBKolndobgz7_h1H8OIFe-hCxprngBB1wug6wkKoIM3XIgwboZHsrSnJI21Jes79sWJLqaoL0DlUeje8uF1NkKPrx7-C8LfJA1ADeF9Od8VFma8bAhC7QmY5uVOH5oh_P4glAnDqP5yDQIDkSIrIA8ktaEQS2nqhgxjQkAHJmXg-x6ohdvnNz064HBqRHVBfYDohl5V9AnoEJ4TwSsXSquHRzATx')" }}></div>
+                <div className="absolute inset-0 hero-overlay-gradient opacity-90"></div>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 pt-20">
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-[100px] font-heading font-bold text-white leading-[1.1] mb-8 tracking-tight max-w-none mx-auto drop-shadow-sm">
+                        Building the Future <br className="hidden lg:block"/> of Work, Together
                     </h1>
-                    <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-white/90 font-body">
-                        Transform your career with South Florida's premier AI-powered training program. Learn cutting-edge skills, build real projects, and launch into the tech economy.
+                    <p className="mt-6 max-w-2xl mx-auto text-xl md:text-2xl text-white font-body font-light leading-relaxed mb-12 drop-shadow-md opacity-95">
+                        Whether you're looking to learn AI or implement it in your business, we're here to help you navigate the new tech economy with clarity and community.
                     </p>
-                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft w-full sm:w-auto relative z-20">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+                        <button 
+                            onClick={scrollToPath}
+                            className="w-full sm:w-auto bg-white text-primary hover:scale-105 transition-transform duration-300 font-heading font-bold py-5 px-10 rounded-2xl shadow-xl text-lg text-center"
+                        >
                             Start Your Journey
                         </button>
-                        <button onClick={() => navigate('/contact')} className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 w-full sm:w-auto relative z-20">
-                            Get in Touch
+                    </div>
+                </div>
+            </section>
+
+            <main className="relative">
+                {/* Path Section */}
+                <section id="whats-your-path" className="py-32 bg-white relative">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
+                        <h2 className="text-4xl md:text-6xl font-heading font-bold text-slate-900 tracking-tight leading-tight">What's Your Path?</h2>
+                    </div>
+                    <div className="grid lg:grid-cols-2 gap-10 max-w-7xl mx-auto px-4">
+                        <button onClick={() => window.open(LEARNING_URL, '_blank')} className="group relative block rounded-[2.5rem] overflow-hidden bg-primary shadow-soft hover:shadow-hover transition-all duration-500 h-[500px] text-left border-0">
+                            <div className="absolute inset-0 z-0 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-50" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-primary/70"></div>
+                            </div>
+                            <div className="h-full p-12 flex flex-col justify-between relative z-10">
+                                <h3 className="text-4xl font-heading font-bold text-white">Learn AI</h3>
+                                <p className="text-xl text-white font-medium">Master the tools and strategies to thrive in the age of intelligence.</p>
+                                <span className="text-white font-bold flex items-center gap-2">Explore <span className="material-symbols-outlined">arrow_forward</span></span>
+                            </div>
+                        </button>
+                        <button onClick={() => navigate('/services')} className="group relative block rounded-[2.5rem] overflow-hidden bg-secondary shadow-soft hover:shadow-hover transition-all duration-500 h-[500px] text-left border-0">
+                            <div className="absolute inset-0 z-0 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop" alt="" className="w-full h-full object-cover scale-110 opacity-50" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-secondary/90 via-secondary/80 to-secondary/70"></div>
+                            </div>
+                            <div className="h-full p-12 flex flex-col justify-between relative z-10">
+                                <h3 className="text-4xl font-heading font-bold text-white">Implement AI</h3>
+                                <p className="text-xl text-white font-medium">Deploy custom AI solutions that optimize your operations.</p>
+                                <span className="text-white font-bold flex items-center gap-2">See Solutions <span className="material-symbols-outlined">arrow_forward</span></span>
+                            </div>
                         </button>
                     </div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background-light to-transparent pointer-events-none"></div>
-            </section>
+                </section>
 
-            {/* Career Transformation Section */}
-            <section className="py-16 sm:py-24 bg-background-light">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">
-                        Your Transformation <span className="text-[#0bceff]">Starts Here</span>
-                    </h2>
-                    <p className="mt-6 max-w-3xl mx-auto text-lg text-text-body-light font-body">
-                        WeCreate is reimagining workforce development for the AI era. We're not just teaching tools—we're building a community of innovators, creators, and leaders who are ready to shape the future of work in South Florida and beyond.
-                    </p>
-                </div>
-            </section>
-            
-            {/* Learn-Build-Launch Model Section */}
-            <section className="pb-16 sm:pb-24 relative bg-background-light">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">
-                            The <span className="text-[#C084FC]">Learn</span> • <span className="text-[#60A5FA]">Build</span> • <span className="text-[#9333EA]">Launch</span> Model
-                        </h2>
-                        <p className="mt-4 text-lg text-text-body-light font-body">Our proven three-phase approach takes you from curious beginner to confident professional.</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <ModelCard icon="menu_book" title="Learn" description="Master AI-powered tools and modern tech skills through hands-on workshops led by industry experts in our South Florida community." />
-                        <ModelCard icon="architecture" title="Build" description="Apply your knowledge to real-world projects. Create a portfolio that showcases your skills and attracts employers." />
-                        <ModelCard icon="rocket_launch" title="Launch" description="Enter the job market with confidence. We connect you with local employers and provide ongoing career support." />
-                    </div>
-                </div>
-            </section>
-            
-            {/* Why WeCreate is Different Section */}
-            <section className="py-16 sm:py-24 bg-background-light">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">
-                                Why <span className="text-[#0bceff]">WeCreate</span> is Different
-                            </h2>
-                            <div className="mt-8 space-y-8">
-                                <DifferentiatorItem icon="psychology" title="AI-First Curriculum" description="Stay ahead of the curve with training focused on the tools and technologies shaping tomorrow's workforce." />
-                                <DifferentiatorItem icon="groups" title="Community-Powered" description="Join a vibrant network of learners, mentors, and employers right here in South Florida." />
+                {/* Social Gallery Section */}
+                <section className="py-24 bg-white overflow-hidden">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+                        <div className="flex flex-col md:flex-row items-end justify-between gap-6">
+                            <div>
+                                <span className="text-primary font-bold uppercase tracking-widest text-[11px] mb-3 block font-heading">Follow our journey</span>
+                                <h2 className="text-4xl md:text-5xl font-heading font-bold text-slate-900 tracking-tight">Built in <span className="text-gradient italic">Public.</span></h2>
                             </div>
-                            <div className="mt-10">
-                                <button onClick={() => navigate('/about')} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
-                                    Discover All Five Differentiators
-                                </button>
-                            </div>
-                        </div>
-                        <div className="mt-10 lg:mt-0 relative">
-                            <img alt="Diverse group of young professionals collaborating in a bright, modern workshop" className="rounded-xl shadow-soft w-full h-full object-cover" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Direct Contact CTA Section - NEW */}
-            <section className="py-20 bg-slate-50 border-y border-border-light">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 bg-white p-8 md:p-12 rounded-3xl shadow-soft">
-                        <div className="text-center md:text-left">
-                            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-heading-light">Have more questions?</h2>
-                            <p className="text-text-body-light mt-2 text-lg">Our team is here to help you navigate your AI journey.</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                            <button onClick={() => navigate('/contact')} className="bg-primary hover:bg-primary-hover text-white font-heading font-bold py-4 px-10 rounded-xl shadow-lg transition-all transform hover:scale-105">
-                                Contact Us Directly
-                            </button>
-                            <a href="mailto:info@wecreatehub.com" className="bg-slate-100 hover:bg-slate-200 text-text-heading-light font-heading font-bold py-4 px-10 rounded-xl transition-all text-center">
-                                Send Email
+                            <a href="https://www.instagram.com/hello_wecreate/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-slate-400 font-heading font-bold hover:text-primary transition-colors group">
+                                @hello_wecreate
+                                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </a>
                         </div>
                     </div>
-                </div>
-            </section>
-            
-            {/* CTA Section */}
-            <section className="gradient-bg-section text-white">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-                    <h2 className="text-4xl md:text-5xl font-heading font-semibold drop-shadow-sm">Ready to Become Future-Proof?</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-lg text-white/90 font-body">
-                        Join the next cohort of South Florida's future tech leaders. Applications are now open for our AI Career Intensive.
-                    </p>
-                    <div className="mt-8">
-                        <button onClick={() => navigate('/programs')} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
-                            Start Your Journey
+                    
+                    <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto pb-8 md:pb-0 px-4 sm:px-6 lg:px-8 no-scrollbar scroll-smooth snap-x">
+                        {socialFeed.map((post) => (
+                            <SocialVideoCard key={post.id} post={post} convertLink={getDirectVideoLink} navigate={navigate} />
+                        ))}
+                    </div>
+                </section>
+
+                {/* Ready Section */}
+                <section className="gradient-bg-section py-32 relative overflow-hidden">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                        <h2 className="text-4xl md:text-6xl lg:text-8xl font-heading font-bold mb-8 tracking-tighter text-white">Ready to Build the Future?</h2>
+                        <button onClick={scrollToPath} className="inline-block bg-white text-primary hover:scale-105 hover:bg-slate-50 font-heading font-bold py-6 px-16 rounded-2xl transition-all duration-300 shadow-2xl text-xl text-center">
+                            Start Today
                         </button>
                     </div>
-                </div>
-            </section>
-        </>
+                </section>
+            </main>
+        </div>
     );
 };
 
-const ModelCard: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (
-    <div className="relative bg-card-bg-light p-8 rounded-xl shadow-soft border border-border-light transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group z-10">
-        <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-light to-secondary-light rounded-full mb-6 shadow-md">
-            <span className="material-symbols-outlined text-3xl text-[#0bceff]">{icon}</span>
-        </div>
-        <h3 className="text-2xl font-heading font-semibold text-text-heading-light mb-3">{title}</h3>
-        <p className="text-text-body-light font-body">{description}</p>
-    </div>
-);
+const SocialVideoCard: React.FC<{ post: SocialPost; convertLink: (url: string) => string; navigate: (p: string) => void }> = ({ post, convertLink, navigate }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isHovered, setIsHovered] = useState(false);
 
-const DifferentiatorItem: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (
-    <div className="flex items-start">
-        <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-primary-light rounded-full shadow-sm">
-            <span className="material-symbols-outlined text-2xl text-[#0bceff]">{icon}</span>
-        </div>
-        <div className="ml-4">
-            <h3 className="text-xl font-heading font-semibold text-text-heading-light">{title}</h3>
-            <p className="mt-1 text-text-body-light font-body">{description}</p>
-        </div>
-    </div>
-);
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        if (videoRef.current) {
+            videoRef.current.play().catch(() => {});
+        }
+    };
 
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+        }
+    };
+
+    const handleClick = () => {
+        if (post.link.startsWith('http')) {
+            window.open(post.link, '_blank');
+        } else {
+            navigate(post.link);
+        }
+    };
+
+    const directUrl = convertLink(post.videoUrl);
+
+    return (
+        <div 
+            className="relative flex-shrink-0 w-[240px] md:w-full aspect-[9/16] rounded-[2rem] overflow-hidden group snap-center shadow-lg hover:shadow-2xl transition-all duration-500 bg-slate-950 cursor-pointer"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
+        >
+            <video 
+                ref={videoRef}
+                src={directUrl}
+                poster={post.thumbnail}
+                className={`w-full h-full object-cover transition-all duration-700 ${isHovered ? 'opacity-100 scale-105' : 'opacity-60 scale-100'}`}
+                muted
+                loop
+                playsInline
+            />
+            
+            <div className={`absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent p-8 flex flex-col justify-end transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+                <span className="text-white text-[10px] font-bold uppercase tracking-widest mb-1 font-heading opacity-80">{post.type}</span>
+                <p className="text-white font-heading font-bold text-xl leading-tight">{post.title}</p>
+            </div>
+
+            <div className={`absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 transition-all duration-300 ${isHovered ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}>
+                <span className="material-symbols-outlined text-white text-2xl">play_arrow</span>
+            </div>
+            
+            <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/10">
+                <div className={`h-full bg-primary transition-all duration-[8000ms] linear ${isHovered ? 'w-full' : 'w-0'}`} />
+            </div>
+        </div>
+    );
+};
 
 export default HomePage;

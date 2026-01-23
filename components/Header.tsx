@@ -1,127 +1,176 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { LEARNING_URL } from '../config';
 
 const Header: React.FC = () => {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
-    // Determine if we should use light theme (dark text) based on the route
-    const isLightTheme = ['/about', '/admin', '/info', '/contact', '/optimize'].includes(location.pathname);
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    useEffect(() => {
-        if (isMobileMenuOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [isMobileMenuOpen]);
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
 
-    const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'About', path: '/about' },
-        { name: 'Programs', path: '/programs' },
-        { name: 'Optimize', path: '/optimize' },
-        { name: 'Partnership', path: '/partnership' },
-        { name: 'Contact', path: '/contact' },
-    ];
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Services', path: '/services' },
+    { name: 'Learn', path: LEARNING_URL, isExternal: true },
+    { name: 'Partnership', path: '/partnership' },
+    { name: 'Contact', path: '/contact' },
+  ];
 
-    const mobileMenuIconColor = isLightTheme ? 'text-text-heading-light' : 'text-white';
-    
-    // Helper to determine active state
-    const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path;
+  
+  // Pages with dark heroes that need white nav initially
+  const darkHeroPages = ['/', '/services', '/events', '/programs'];
+  const isDarkHeroPage = darkHeroPages.includes(location.pathname);
+  
+  // Dynamic color logic for visibility
+  const isLightTextMode = isDarkHeroPage && !scrolled;
+  
+  const navTextColor = isLightTextMode ? 'text-white' : 'text-slate-700';
+  const logoBaseColor = isLightTextMode ? 'text-white' : 'text-slate-900';
+  const activePillBg = isLightTextMode ? 'bg-white/20' : 'bg-primary/10';
+  const activeTextColor = isLightTextMode ? 'text-white' : 'text-primary';
 
-    return (
-        <>
-            <header className="absolute top-0 left-0 right-0 z-30">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <nav className="flex items-center justify-between py-6">
-                        <Link to="/" className={`text-2xl md:text-[1.8rem] lg:text-[2rem] font-logo font-semibold transition-all duration-300 ${isLightTheme ? 'text-text-heading-light' : 'text-white'}`}>
-                            WeCreate
-                        </Link>
-                        <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    to={link.path}
-                                    className={`text-base lg:text-lg font-medium transition-all duration-300 ${
-                                        isActive(link.path)
-                                            ? 'text-[#00d9ff] font-bold'
-                                            : isLightTheme
-                                                ? 'text-text-heading-light hover:text-[#00d9ff] hover:font-bold'
-                                                : 'text-white hover:text-[#00d9ff] hover:font-bold'
-                                    }`}
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
-                        </div>
-                        <div className="hidden md:block">
-                            <Link to="/programs" className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-2.5 lg:py-3 px-5 lg:px-6 rounded-lg transition-all duration-300 shadow-mild text-sm lg:text-base">
-                                Get Started
-                            </Link>
-                        </div>
-                        <div className="md:hidden">
-                            <button
-                                onClick={() => setIsMobileMenuOpen(true)}
-                                className={mobileMenuIconColor}
-                                aria-label="Open menu"
-                            >
-                                <span className="material-symbols-outlined text-4xl">menu</span>
-                            </button>
-                        </div>
-                    </nav>
-                </div>
-            </header>
+  const mobileBtnBorder = scrolled 
+    ? 'border-slate-200 text-slate-900' 
+    : (isLightTextMode ? 'border-white/30 text-white' : 'border-slate-300 text-slate-900');
 
-            {/* Mobile Menu Overlay */}
-            <div 
-                aria-hidden="true"
-                className={`fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-            ></div>
+  return (
+    <header className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
+      scrolled 
+        ? 'bg-white/90 backdrop-blur-xl border-b border-slate-100 py-4 shadow-sm' 
+        : 'bg-transparent py-6'
+    }`}>
+      {/* Spread out to edges of the site */}
+      <div className="max-w-full mx-auto px-8 lg:px-12 flex items-center justify-between">
+        <Link to="/" className={`text-3xl font-logo font-semibold tracking-tight flex items-center transition-colors duration-300 ${logoBaseColor}`}>
+          We<span className={isLightTextMode ? 'text-white' : 'text-gradient'}>Create</span>
+        </Link>
+        
+        {/* Desktop Nav - Centered in the wide layout */}
+        <nav className="hidden xl:flex items-center space-x-2">
+          {navLinks.map((link) => {
+            const active = isActive(link.path);
+            const linkClasses = `text-[13px] font-bold uppercase tracking-[0.15em] px-5 py-2.5 rounded-full transition-all duration-300 hover:text-primary ${
+              active 
+                ? `${activePillBg} ${activeTextColor}` 
+                : navTextColor
+            }`;
 
-            {/* Mobile Menu Panel */}
-            <aside 
-                className={`fixed top-0 right-0 bottom-0 z-50 bg-background-light w-full max-w-sm transform transition-transform duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="mobile-menu-title"
+            if (link.isExternal) {
+              return (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClasses}
+                >
+                  {link.name}
+                </a>
+              );
+            }
+
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={linkClasses}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-6">
+          <Link 
+            to="/contact" 
+            className="hidden sm:inline-flex bg-navy text-white px-8 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-navy/10 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            WORK WITH US
+          </Link>
+          <button 
+            className={`xl:hidden flex items-center justify-center w-11 h-11 rounded-full border transition-all duration-300 ${mobileBtnBorder}`}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className="material-symbols-outlined">{isOpen ? 'close' : 'menu'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Nav Overlay */}
+      <div className={`xl:hidden fixed inset-0 top-0 bg-white z-[90] transition-all duration-500 ease-in-out ${
+        isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+      }`}>
+        <div className="flex flex-col h-full p-8 pt-24">
+          <nav className="flex flex-col space-y-4">
+            {navLinks.map((link) => {
+              const active = isActive(link.path);
+              const mobileLinkClasses = `text-4xl font-space font-bold border-b border-slate-50 pb-4 transition-colors ${
+                active ? 'text-primary' : 'text-slate-900 hover:text-primary'
+              }`;
+
+              if (link.isExternal) {
+                return (
+                  <a
+                    key={link.path}
+                    href={link.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={mobileLinkClasses}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={mobileLinkClasses}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
+          
+          <div className="mt-12">
+            <Link 
+              to="/contact" 
+              className="bg-primary block w-full text-center text-white py-6 rounded-[2rem] text-xl font-bold shadow-2xl shadow-primary/20"
+              onClick={() => setIsOpen(false)}
             >
-                <div className="p-6 flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-12">
-                         <Link id="mobile-menu-title" to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-[2.3rem] font-logo font-semibold text-text-heading-light">
-                            We<span className="text-[#0bceff]">Create</span>
-                        </Link>
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="text-text-heading-light" aria-label="Close menu">
-                            <span className="material-symbols-outlined text-4xl">close</span>
-                        </button>
-                    </div>
-                    <nav className="flex flex-col items-center justify-center flex-grow space-y-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                to={link.path}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className={`text-3xl font-heading font-medium transition-colors duration-300 ${
-                                    isActive(link.path) ? 'text-primary' : 'text-text-heading-light hover:text-primary'
-                                }`}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                    </nav>
-                    <div className="mt-8 text-center">
-                        <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="bg-primary hover:bg-primary-hover focus:ring-4 focus:ring-primary/30 text-white font-heading font-medium py-4 px-10 rounded-lg transition-all duration-300 shadow-mild text-xl w-full inline-block">
-                            Get Started
-                        </Link>
-                    </div>
-                </div>
-            </aside>
-        </>
-    );
+              WORK WITH US
+            </Link>
+          </div>
+
+          <div className="mt-auto pb-8 text-center">
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Strategic Studio & AI Hub</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

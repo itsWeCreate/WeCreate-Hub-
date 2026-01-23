@@ -1,63 +1,58 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LinkedInIcon, InstagramIcon } from './icons';
 
 const Footer: React.FC = () => {
     return (
-       <footer className="bg-slate-100">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <footer className="bg-slate-100 dark:bg-slate-950 border-t border-border-light dark:border-border-dark">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
                     <div className="md:col-span-1">
-                        <Link to="/" className="text-3xl font-logo font-semibold text-text-heading-light">
-                           We<span className="text-[#0bceff]">Create</span>
+                        <Link to="/" className="text-3xl font-logo font-medium text-text-heading-light dark:text-text-heading-dark">
+                            We<span className="text-primary">Create</span>
                         </Link>
-                        <p className="mt-4 text-text-body-light font-body">
-                            Building the future of work, together. Transform your career with South Florida's premier AI training community.
+                        <p className="mt-8 text-text-body-light dark:text-text-body-dark font-body font-light leading-relaxed text-lg">
+                            An AI education and consulting studio empowering builders to learn, build, and launch with clarity.
                         </p>
                     </div>
                     <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Quick Links</h3>
-                        <ul className="mt-4 space-y-3">
-                            <li><Link to="/" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Home</Link></li>
-                            <li><Link to="/about" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">About Us</Link></li>
-                            <li><Link to="/programs" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Programs</Link></li>
-                            <li><Link to="/optimize" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Optimize</Link></li>
-                            <li><Link to="/partnership" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Partnership</Link></li>
-                            <li><Link to="/contact" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Contact</Link></li>
-                            <li><Link to="/info" className="text-text-body-light hover:text-[#0bceff] transition-colors font-body">Info</Link></li>
+                        <h3 className="font-heading font-semibold text-text-heading-light dark:text-text-heading-dark mb-8 text-lg">Quick Links</h3>
+                        <ul className="space-y-4 text-lg">
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/">Home</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/about">About Us</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/services">Services</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/optimize">Optimize</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/partnership">Partnership</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/contact">Contact</Link></li>
+                            <li><Link className="text-text-body-light dark:text-text-body-dark hover:text-primary transition-colors font-light" to="/info">Info</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Contact</h3>
-                        <ul className="mt-4 space-y-3">
+                        <h3 className="font-heading font-semibold text-text-heading-light dark:text-text-heading-dark mb-8 text-lg">Contact</h3>
+                        <ul className="space-y-6 text-lg">
                             <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">location_on</span>
-                                <span className="ml-2 text-text-body-light font-body">South Florida</span>
+                                <span className="material-symbols-outlined text-primary mt-1 text-2xl">location_on</span>
+                                <span className="ml-4 text-text-body-light dark:text-text-body-dark font-light">Remote & South Florida</span>
                             </li>
                             <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">mail</span>
-                                <span className="ml-2 text-text-body-light font-body">info@wecreatehub.com</span>
-                            </li>
-                             <li className="flex items-start">
-                                <span className="material-symbols-outlined text-[#0bceff] mt-1">call</span>
-                                <span className="ml-2 text-text-body-light font-body">(315) 570-9317</span>
+                                <span className="material-symbols-outlined text-primary mt-1 text-2xl">mail</span>
+                                <span className="ml-4 text-text-body-light dark:text-text-body-dark font-light">hello@wecreatehub.com</span>
                             </li>
                         </ul>
                     </div>
                     <div>
-                        <h3 className="font-heading font-semibold text-text-heading-light">Follow Us</h3>
-                        <div className="flex mt-4 space-x-4">
-                            <a href="https://www.linkedin.com/company/wecreate-enterprises" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
-                                <LinkedInIcon />
+                        <h3 className="font-heading font-semibold text-text-heading-light dark:text-text-heading-dark mb-8 text-lg">Follow Us</h3>
+                        <div className="flex space-x-5">
+                            <a className="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 text-text-body-light dark:text-text-body-dark rounded-xl shadow-sm hover:bg-primary hover:text-white transition-all duration-300" href="https://www.linkedin.com/company/wecreate-enterprises" target="_blank" rel="noopener noreferrer">
+                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
                             </a>
-                            <a href="https://www.instagram.com/hello_wecreate/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 flex items-center justify-center bg-slate-200 text-text-body-light rounded-full hover:bg-primary hover:text-white transition-all duration-300">
-                                <InstagramIcon />
+                            <a className="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 text-text-body-light dark:text-text-body-dark rounded-xl shadow-sm hover:bg-primary hover:text-white transition-all duration-300" href="https://www.instagram.com/hello_wecreate/" target="_blank" rel="noopener noreferrer">
+                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"></path></svg>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t border-border-light text-center text-text-body-light">
-                    <p>&copy; {new Date().getFullYear()} WeCreate. All rights reserved.</p>
+                <div className="mt-20 pt-10 border-t border-border-light dark:border-border-dark text-center text-text-body-light dark:text-text-body-dark text-base font-light">
+                    <p>© {new Date().getFullYear()} WeCreate Studio. All rights reserved.</p>
                 </div>
             </div>
         </footer>

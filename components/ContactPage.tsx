@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
@@ -8,14 +7,31 @@ interface ContactPageProps {
 
 const ContactPage: React.FC<ContactPageProps> = ({ onSuccess }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
-        subject: 'General Inquiry',
         message: ''
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const interestOptions = [
+        "AI Consulting", 
+        "AI Checkup", 
+        "Websites", 
+        "Digital Wearables", 
+        "AI Education", 
+        "Partnerships"
+    ];
+
+    const toggleInterest = (interest: string) => {
+        setSelectedInterests(prev => 
+            prev.includes(interest) 
+                ? prev.filter(i => i !== interest) 
+                : [...prev, interest]
+        );
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
@@ -24,8 +40,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ onSuccess }) => {
         e.preventDefault();
         setIsSubmitting(true);
 
+        const interestsString = selectedInterests.length > 0 
+            ? `INTERESTED IN: ${selectedInterests.join(', ')}\n\n` 
+            : '';
+
         const submissionData = {
-            ...formData,
+            fullName: formData.fullName,
+            email: formData.email,
+            message: `${interestsString}${formData.message}`,
             formType: 'generalInquiry',
             submittedAt: new Date().toISOString()
         };
@@ -51,161 +73,132 @@ const ContactPage: React.FC<ContactPageProps> = ({ onSuccess }) => {
                 onSuccess('Message saved locally. (Backend not configured)');
             }
 
-            setFormData({ fullName: '', email: '', subject: 'General Inquiry', message: '' });
+            setFormData({ fullName: '', email: '', message: '' });
+            setSelectedInterests([]);
         } catch (error) {
             console.error("Submission error", error);
-            onSuccess("Couldn't send message. Please email info@wecreatehub.com directly.");
+            onSuccess("Couldn't send message. Please email hello@wecreate.studio directly.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="bg-background-light min-h-screen">
-            {/* Hero Section */}
-            <section className="relative hero-gradient text-white pt-40 pb-20 overflow-hidden">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="text-5xl md:text-6xl font-heading font-semibold leading-tight drop-shadow-sm">
-                        Get in Touch
-                    </h1>
-                    <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-white/90 font-body">
-                        Have a question about our programs? Want to join the community? Or just want to say hi? We'd love to hear from you.
-                    </p>
-                </div>
-            </section>
-
-            <section className="py-16 sm:py-24 -mt-10 relative z-20">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-12">
-                        
-                        {/* Contact Info Column */}
-                        <div className="lg:col-span-1 space-y-8">
-                            <div className="bg-white p-8 rounded-2xl shadow-soft border border-border-light">
-                                <h3 className="text-2xl font-heading font-semibold text-text-heading-light mb-6">Contact Info</h3>
-                                
-                                <div className="space-y-6">
-                                    <ContactDetail 
-                                        icon="mail" 
-                                        label="Email Us" 
-                                        value="info@wecreatehub.com" 
-                                        href="mailto:info@wecreatehub.com"
-                                    />
-                                    <ContactDetail 
-                                        icon="call" 
-                                        label="Call Us" 
-                                        value="(315) 570-9317" 
-                                        href="tel:3155709317"
-                                    />
-                                    <ContactDetail 
-                                        icon="location_on" 
-                                        label="Visit Us" 
-                                        value="South Florida Hub" 
-                                    />
-                                </div>
-
-                                <div className="mt-10 pt-8 border-t border-gray-100">
-                                    <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Office Hours</h4>
-                                    <p className="text-text-body-light text-sm">Mon - Fri: 9:00 AM - 6:00 PM EST</p>
-                                    <p className="text-text-body-light text-sm mt-1">Sat - Sun: Community Events only</p>
-                                </div>
+        <div className="bg-background-light dark:bg-background-dark min-h-screen">
+            <main className="pt-48 pb-24">
+                <div className="container mx-auto px-6 lg:px-12">
+                    <div className="grid lg:grid-cols-2 gap-16 items-start">
+                        {/* Left Column: Content */}
+                        <div className="max-w-xl animate-fade-in-up">
+                            <span className="inline-block py-1 px-3 bg-primary-light/30 text-primary dark:bg-primary/20 dark:text-primary-light text-xs font-medium uppercase tracking-widest rounded mb-6">Connect With Us</span>
+                            <h1 className="text-5xl md:text-7xl font-heading font-medium leading-[1.1] text-text-heading-light dark:text-text-heading-dark mb-8 tracking-tighter">
+                                Let's Build What <br/><span className="text-primary italic">Works</span>.
+                            </h1>
+                            <p className="text-xl md:text-2xl text-text-body-light dark:text-text-body-dark font-light leading-relaxed mb-12">
+                                Whether you're looking to integrate AI into your workflow or ready to launch a new venture, our studio is here to help you navigate the future with clarity.
+                            </p>
+                            
+                            <div className="space-y-8">
+                                <FeatureItem icon="verified" text="Expert AI Consulting" />
+                                <FeatureItem icon="school" text="Custom Education Programs" />
+                                <FeatureItem icon="rocket" text="Gen Z Focused Strategy" />
                             </div>
                         </div>
 
-                        {/* Form Column */}
-                        <div className="lg:col-span-2">
-                            <div className="bg-white p-8 md:p-12 rounded-2xl shadow-soft border border-border-light h-full">
-                                <h3 className="text-3xl font-heading font-semibold text-text-heading-light mb-2">Send us a Message</h3>
-                                <p className="text-text-body-light mb-8">Reach out and let us know how we can help you build your future.</p>
+                        {/* Right Column: Form Card */}
+                        <div className="contact-form-card p-1 rounded-3xl shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                            <div className="bg-white dark:bg-card-bg-dark rounded-[calc(1.5rem+4px)] p-8 md:p-12">
+                                <form onSubmit={handleSubmit} className="space-y-8">
+                                    <div>
+                                        <h3 className="text-xl font-heading font-medium text-text-heading-light dark:text-text-heading-dark mb-6">What are you interested in?</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {interestOptions.map((interest) => (
+                                                <button
+                                                    key={interest}
+                                                    type="button"
+                                                    onClick={() => toggleInterest(interest)}
+                                                    className={`
+                                                        px-5 py-2 rounded-full border text-sm font-normal transition-all duration-300
+                                                        ${selectedInterests.includes(interest)
+                                                            ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                                                            : 'border-border-light dark:border-border-dark text-text-body-light dark:text-text-body-dark hover:bg-gray-50 dark:hover:bg-slate-800'
+                                                        }
+                                                    `}
+                                                >
+                                                    {interest}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm font-medium text-text-heading-light mb-1.5">Full Name</label>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-text-body-light/60 dark:text-text-body-dark/60 ml-1">Full Name</label>
                                             <input 
-                                                type="text" 
                                                 name="fullName"
                                                 required
                                                 value={formData.fullName}
                                                 onChange={handleInputChange}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50/50"
-                                                placeholder="Jane Doe"
+                                                className="w-full bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary rounded-xl p-4 text-base font-light dark:text-white" 
+                                                placeholder="Alex Chen" 
+                                                type="text"
                                             />
                                         </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-text-heading-light mb-1.5">Email Address</label>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-text-body-light/60 dark:text-text-body-dark/60 ml-1">Email Address</label>
                                             <input 
-                                                type="email" 
                                                 name="email"
                                                 required
                                                 value={formData.email}
                                                 onChange={handleInputChange}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50/50"
-                                                placeholder="jane@example.com"
+                                                className="w-full bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary rounded-xl p-4 text-base font-light dark:text-white" 
+                                                placeholder="alex@company.com" 
+                                                type="email"
                                             />
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-text-heading-light mb-1.5">Subject</label>
-                                        <select 
-                                            name="subject"
-                                            value={formData.subject}
-                                            onChange={handleInputChange}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50/50"
-                                        >
-                                            <option>General Inquiry</option>
-                                            <option>Program Question</option>
-                                            <option>Partnership Interest</option>
-                                            <option>Technical Support</option>
-                                            <option>Other</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-text-heading-light mb-1.5">Your Message</label>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-text-body-light/60 dark:text-text-body-dark/60 ml-1">How can we help?</label>
                                         <textarea 
                                             name="message"
                                             required
-                                            rows={6}
                                             value={formData.message}
                                             onChange={handleInputChange}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50/50"
-                                            placeholder="Tell us what's on your mind..."
+                                            className="w-full bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary rounded-xl p-4 text-base font-light dark:text-white" 
+                                            placeholder="Tell us a bit about your project or goals..." 
+                                            rows={4}
                                         ></textarea>
                                     </div>
 
                                     <button 
                                         type="submit" 
                                         disabled={isSubmitting}
-                                        className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold py-4 rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2"
+                                        className="w-full bg-primary hover:bg-primary-hover text-white font-heading font-bold text-lg py-5 rounded-xl transition-all duration-300 shadow-xl shadow-primary/20 disabled:opacity-50"
                                     >
-                                        {isSubmitting ? 'Sending...' : 'Send Message'}
-                                        {!isSubmitting && <span className="material-symbols-outlined text-xl">send</span>}
+                                        {isSubmitting ? 'Sending...' : 'Submit / Book a Call'}
                                     </button>
+                                    
+                                    <p className="text-center text-xs font-light text-text-body-light/60 dark:text-text-body-dark/60">
+                                        We'll get back to you within 24 hours.
+                                    </p>
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </section>
+            </main>
         </div>
     );
 };
 
-const ContactDetail: React.FC<{ icon: string, label: string, value: string, href?: string }> = ({ icon, label, value, href }) => (
-    <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center text-primary flex-shrink-0">
-            <span className="material-symbols-outlined text-2xl">{icon}</span>
+// Internal Helper for Feature Items
+const FeatureItem: React.FC<{ icon: string, text: string }> = ({ icon, text }) => (
+    <div className="flex items-center space-x-5">
+        <div className="w-12 h-12 rounded-full bg-white dark:bg-card-bg-dark shadow-soft flex items-center justify-center border border-border-light/30">
+            <span className="material-symbols-outlined text-primary text-2xl">{icon}</span>
         </div>
-        <div>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5">{label}</p>
-            {href ? (
-                <a href={href} className="text-lg font-semibold text-text-heading-light hover:text-primary transition-colors">{value}</a>
-            ) : (
-                <p className="text-lg font-semibold text-text-heading-light">{value}</p>
-            )}
-        </div>
+        <span className="text-sm md:text-base font-medium text-text-heading-light dark:text-text-heading-dark uppercase tracking-[0.15em]">{text}</span>
     </div>
 );
 

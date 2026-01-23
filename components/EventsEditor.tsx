@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useRef } from 'react';
-import { AppConfig, DEFAULT_APP_CONFIG, EventItem } from '../src/types';
+import { AppConfig, DEFAULT_APP_CONFIG, EventItem } from '../types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 const EventsEditor: React.FC = () => {
@@ -8,28 +7,20 @@ const EventsEditor: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
-
-    // For Drag and Drop
     const dragItem = useRef<number | null>(null);
     const dragOverItem = useRef<number | null>(null);
 
-    // Fetch existing config on load
     useEffect(() => {
         const loadConfig = async () => {
             if (!GOOGLE_SHEET_WEB_APP_URL) return;
             setIsLoading(true);
             try {
                 const response = await fetch(`${GOOGLE_SHEET_WEB_APP_URL}?action=getConfig`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const text = await response.text();
                 try {
                     const data = JSON.parse(text);
-                    if (data) {
-                        // Merge with default to ensure all fields exist
-                        setConfig(prev => ({ ...prev, ...data }));
-                    }
+                    if (data) setConfig(prev => ({ ...prev, ...data }));
                 } catch (e) {
                     console.warn("Editor received non-JSON config, using default.");
                 }
@@ -47,20 +38,12 @@ const EventsEditor: React.FC = () => {
         setSaveMessage(null);
         try {
             if (!GOOGLE_SHEET_WEB_APP_URL) throw new Error("API URL not configured");
-
             const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({
-                    action: 'saveConfig',
-                    config: config
-                }),
+                body: JSON.stringify({ action: 'saveConfig', config: config }),
             });
-            
-            if (!response.ok) {
-                 throw new Error(`HTTP Error: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
             const text = await response.text();
             let result;
             try {
@@ -68,7 +51,6 @@ const EventsEditor: React.FC = () => {
             } catch (e) {
                 throw new Error("Invalid response from server");
             }
-
             if (result.result === 'success') {
                 setSaveMessage({ type: 'success', text: 'Events saved successfully!' });
             } else {
@@ -90,19 +72,7 @@ const EventsEditor: React.FC = () => {
     };
 
     const addEvent = () => {
-        const newEvent: EventItem = {
-            id: Date.now().toString(),
-            month: 'JAN',
-            day: '1',
-            type: 'EVENT',
-            title: 'New Event',
-            time: '12:00 PM',
-            location: 'Virtual',
-            description: 'Event description goes here.',
-            buttonText: 'RSVP',
-            typeColor: 'text-[#0bceff]',
-            url: '#'
-        };
+        const newEvent: EventItem = { id: Date.now().toString(), month: 'JAN', day: '1', type: 'EVENT', title: 'New Event', time: '12:00 PM', location: 'Virtual', description: 'Event description.', buttonText: 'RSVP', typeColor: 'text-[#0bceff]', url: '#' };
         setConfig(prev => ({ ...prev, events: [...prev.events, newEvent] }));
     };
 
@@ -111,7 +81,6 @@ const EventsEditor: React.FC = () => {
         setConfig(prev => ({ ...prev, events: prev.events.filter(e => e.id !== id) }));
     };
 
-    // --- Drag and Drop Logic ---
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number) => {
         dragItem.current = position;
         e.dataTransfer.effectAllowed = "move";
@@ -122,9 +91,7 @@ const EventsEditor: React.FC = () => {
         e.preventDefault();
     };
     
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -143,49 +110,20 @@ const EventsEditor: React.FC = () => {
 
     return (
         <div className="space-y-8">
-            {/* Header Actions */}
             <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm sticky top-24 z-20 border border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-700">Events Manager</h2>
                 <div className="flex items-center gap-4">
-                     {saveMessage && (
-                        <span className={`text-sm font-medium ${saveMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                            {saveMessage.text}
-                        </span>
-                    )}
-                    <button onClick={addEvent} className="text-primary hover:bg-purple-50 px-3 py-1 rounded-md text-sm font-medium flex items-center gap-1 transition-colors border border-transparent hover:border-purple-100">
-                        <span className="material-symbols-outlined text-lg">add</span> Add Event
-                    </button>
-                    <button 
-                        onClick={handleSave} 
-                        disabled={isSaving}
-                        className="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-medium shadow-sm disabled:opacity-50 transition-colors"
-                    >
-                        {isSaving ? 'Saving...' : 'Save Changes'}
-                    </button>
+                     {saveMessage && <span className={`text-sm font-medium ${saveMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>{saveMessage.text}</span>}
+                    <button onClick={addEvent} className="text-primary hover:bg-purple-50 px-3 py-1 rounded-md text-sm font-medium flex items-center gap-1 transition-colors border border-transparent hover:border-purple-100"><span className="material-symbols-outlined text-lg">add</span> Add Event</button>
+                    <button onClick={handleSave} disabled={isSaving} className="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-medium shadow-sm disabled:opacity-50 transition-colors">{isSaving ? 'Saving...' : 'Save Changes'}</button>
                 </div>
             </div>
-
-            <p className="text-sm text-gray-500 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
-                <span className="font-semibold">Tip:</span> Drag and drop events to reorder them.
-            </p>
-
+            <p className="text-sm text-gray-500 mb-4 bg-blue-50 p-2 rounded border border-blue-100"><span className="font-semibold">Tip:</span> Drag and drop events to reorder them.</p>
             <div className="space-y-6">
                 {config.events.map((evt, index) => (
-                    <div 
-                        key={evt.id} 
-                        className="border border-gray-200 rounded-lg p-6 bg-gray-50 hover:border-primary/50 transition-colors"
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
-                        onDragEnter={(e) => handleDragEnter(e, index)}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                    >
+                    <div key={evt.id} className="border border-gray-200 rounded-lg p-6 bg-gray-50 hover:border-primary/50 transition-colors" draggable onDragStart={(e) => handleDragStart(e, index)} onDragEnter={(e) => handleDragEnter(e, index)} onDragOver={handleDragOver} onDrop={handleDrop}>
                         <div className="flex gap-4">
-                            {/* Drag Handle */}
-                            <div className="flex flex-col items-center pt-2 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600">
-                                <span className="material-symbols-outlined">drag_indicator</span>
-                            </div>
-
+                            <div className="flex flex-col items-center pt-2 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"><span className="material-symbols-outlined">drag_indicator</span></div>
                             <div className="flex-grow space-y-4">
                                 <div className="grid md:grid-cols-12 gap-4">
                                     <div className="md:col-span-2">
@@ -201,11 +139,10 @@ const EventsEditor: React.FC = () => {
                                         <input type="text" value={evt.title} onChange={(e) => updateEvent(evt.id, 'title', e.target.value)} className="w-full border-gray-300 rounded-md text-sm p-2 font-semibold" />
                                     </div>
                                     <div className="md:col-span-4">
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">Date/Time String</label>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">Date/Time</label>
                                         <input type="text" value={evt.time} onChange={(e) => updateEvent(evt.id, 'time', e.target.value)} className="w-full border-gray-300 rounded-md text-sm p-2" />
                                     </div>
                                 </div>
-
                                 <div className="grid md:grid-cols-2 gap-4">
                                      <div>
                                         <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
@@ -214,15 +151,15 @@ const EventsEditor: React.FC = () => {
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-2 gap-4">
                                              <div>
-                                                <label className="block text-xs font-medium text-gray-500 mb-1">Type (e.g. WORKSHOP)</label>
+                                                <label className="block text-xs font-medium text-gray-500 mb-1">Type</label>
                                                 <input type="text" value={evt.type} onChange={(e) => updateEvent(evt.id, 'type', e.target.value)} className="w-full border-gray-300 rounded-md text-sm p-2" />
                                             </div>
                                              <div>
                                                 <label className="block text-xs font-medium text-gray-500 mb-1">Color Class</label>
                                                 <select value={evt.typeColor} onChange={(e) => updateEvent(evt.id, 'typeColor', e.target.value)} className="w-full border-gray-300 rounded-md text-sm p-2">
-                                                    <option value="text-[#0bceff]">Cyan (Community)</option>
-                                                    <option value="text-blue-600">Blue (Workshop)</option>
-                                                    <option value="text-purple-600">Purple (Special)</option>
+                                                    <option value="text-[#0bceff]">Cyan</option>
+                                                    <option value="text-blue-600">Blue</option>
+                                                    <option value="text-purple-600">Purple</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -243,12 +180,7 @@ const EventsEditor: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div className="flex items-start">
-                                <button onClick={() => deleteEvent(evt.id)} className="text-red-400 hover:text-red-600 p-1" title="Delete event">
-                                    <span className="material-symbols-outlined">delete</span>
-                                </button>
-                            </div>
+                            <div className="flex items-start"><button onClick={() => deleteEvent(evt.id)} className="text-red-400 hover:text-red-600 p-1"><span className="material-symbols-outlined">delete</span></button></div>
                         </div>
                     </div>
                 ))}

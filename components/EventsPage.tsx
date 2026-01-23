@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { OpenModalFunction } from '../App';
-import { AppConfig, DEFAULT_APP_CONFIG, EventItem } from '../src/types';
+import { AppConfig, DEFAULT_APP_CONFIG, EventItem } from '../types';
 import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 interface EventCardProps {
@@ -81,7 +80,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ onOpenPartnershipModal }) => {
     return (
         <div className="bg-background-light">
             <section className="relative hero-gradient text-text-heading-light pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-                <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop')" }}></div>
+                <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1556761175-b413da4b2489?q=80&w=2832&auto=format&fit=crop')" }}></div>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-1">
                     <h1 className="text-5xl md:text-6xl font-heading font-semibold leading-tight drop-shadow-sm text-white">
                         Learn, Build, and Connect

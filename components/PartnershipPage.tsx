@@ -1,163 +1,278 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { OpenModalFunction } from '../App';
-import { CheckIcon } from './icons';
-
-const CollaborationCard: React.FC<{
-    icon: string;
-    gradient: string;
-    title: string;
-    description: string;
-    benefits: string[];
-}> = ({ icon, gradient, title, description, benefits }) => {
-    return (
-        <div className="bg-card-bg-light p-8 rounded-xl shadow-soft border border-border-light h-full flex flex-col">
-            <div className={`flex-shrink-0 flex items-center justify-center w-16 h-16 ${gradient} rounded-2xl mb-6 shadow-md text-white`}>
-                <span className="material-symbols-outlined text-3xl">{icon}</span>
-            </div>
-            <h3 className="text-2xl font-heading font-semibold text-text-heading-light mb-3">{title}</h3>
-            <p className="text-text-body-light font-body mb-4 flex-grow">{description}</p>
-            <ul className="space-y-2">
-                {benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start">
-                        <CheckIcon className="w-6 h-6 text-[#0bceff] flex-shrink-0 mr-2 mt-0.5" />
-                        <span className="text-text-body-light">{benefit}</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
-
-const BenefitItem: React.FC<{
-    icon: string;
-    title: string;
-    description: string;
-}> = ({ icon, title, description }) => {
-    return (
-        <div className="flex items-start">
-            <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 bg-primary-light rounded-2xl shadow-sm text-[#0bceff]">
-                 <span className="material-symbols-outlined text-3xl">{icon}</span>
-            </div>
-            <div className="ml-5">
-                <h3 className="text-xl font-heading font-semibold text-text-heading-light">{title}</h3>
-                <p className="mt-1 text-text-body-light font-body">{description}</p>
-            </div>
-        </div>
-    );
-}
+import { GOOGLE_SHEET_WEB_APP_URL } from '../config';
 
 interface PartnershipPageProps {
     onOpenPartnershipModal: OpenModalFunction;
 }
 
 const PartnershipPage: React.FC<PartnershipPageProps> = ({ onOpenPartnershipModal }) => {
-    return (
-        <div className="bg-background-light">
-            {/* Hero Section */}
-            <section className="relative hero-gradient text-text-heading-light pt-40 pb-24 text-center">
-                <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{backgroundImage: "url('https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?q=80&w=2670&auto=format&fit=crop')"}}></div>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <h1 className="text-5xl md:text-7xl font-heading font-semibold leading-tight drop-shadow-sm text-white">
-                        Partner With Us, <br className="hidden md:block" />
-                        Shape the Future
-                    </h1>
-                    <p className="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-white/90 font-body">
-                        We're building a vibrant ecosystem to empower the next generation of builders and innovators. Join us in creating opportunities and driving talent development in the AI era.
-                    </p>
-                    <div className="mt-10">
-                         <button onClick={onOpenPartnershipModal} className="bg-white text-primary hover:bg-gray-100 font-heading font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-soft">
-                            Become a Partner
-                        </button>
-                    </div>
-                </div>
-            </section>
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [formData, setFormData] = useState({
+        fullName: '',
+        organization: '',
+        email: '',
+        phone: '',
+        partnershipType: 'Corporate Partnership',
+        budget: '',
+        message: ''
+    });
 
-            {/* Ways to Collaborate Section */}
-            <section className="py-16 sm:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                         <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">
-                            Ways to <span className="text-[#0bceff]">Collaborate</span> with WeCreate
-                        </h2>
-                        <p className="mt-4 text-lg max-w-2xl mx-auto text-text-body-light font-body">We offer diverse partnership opportunities to align with your organization's goals.</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                        <CollaborationCard 
-                            icon="corporate_fare" 
-                            gradient="bg-gradient-to-br from-blue-400 to-blue-600"
-                            title="Corporate Partners" 
-                            description="Invest in the future of tech talent. Sponsor our programs, host events, or provide mentorship to our community of emerging builders."
-                            benefits={["Access a diverse talent pipeline", "Enhance your brand visibility", "Shape our curriculum"]}
-                        />
-                        <CollaborationCard 
-                            icon="school" 
-                            gradient="bg-gradient-to-br from-purple-400 to-purple-600"
-                            title="Educational Partners" 
-                            description="Collaborate with us to integrate cutting-edge AI education into your curriculum and provide your students with pathways to tech careers."
-                            benefits={["Co-develop workshops & courses", "Create internship programs", "Guest lectures from our experts"]}
-                        />
-                        <CollaborationCard 
-                            icon="groups" 
-                            gradient="bg-gradient-to-br from-indigo-400 to-indigo-600"
-                            title="Community Partners" 
-                            description="Amplify your impact. Partner with us on community events, outreach initiatives, and joint programming to foster a more inclusive tech ecosystem."
-                            benefits={["Host joint community events", "Cross-promote initiatives", "Share resources and networks"]}
-                        />
-                    </div>
-                </div>
-            </section>
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        const submissionData = { ...formData, formType: 'partnershipInquiry' };
+
+        try {
+            if (GOOGLE_SHEET_WEB_APP_URL) {
+                const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(submissionData),
+                });
+                const result = await response.json();
+                if (result.result !== 'success') {
+                    throw new Error(result.error || 'The API returned an unknown error.');
+                }
+                alert('Thank you! Your inquiry has been submitted successfully.');
+            } else {
+                alert('Inquiry saved locally. (Backend not configured)');
+            }
             
-            {/* Benefits of Partnering Section */}
-            <section className="py-16 sm:py-24 bg-slate-100/70">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div className="order-2 lg:order-1">
-                             <h2 className="text-4xl md:text-5xl font-heading font-semibold text-text-heading-light">
-                                Benefits of <span className="text-[#0bceff]">Partnering</span> With Us
-                            </h2>
-                            <div className="mt-8 space-y-10">
-                                <BenefitItem 
-                                    icon="hub" 
-                                    title="Connect with Top Talent"
-                                    description="Get exclusive access to our pool of skilled, motivated, and job-ready Gen Z builders trained in the latest AI technologies."
-                                />
-                                <BenefitItem 
-                                    icon="campaign" 
-                                    title="Increase Your Brand's Reach"
-                                    description="Showcase your commitment to innovation and community development to a wide audience of students, professionals, and tech enthusiasts."
-                                />
-                                <BenefitItem 
-                                    icon="lightbulb" 
-                                    title="Drive Real Impact"
-                                    description="Directly contribute to building a skilled workforce, fostering local innovation, and creating economic opportunity in South Florida."
-                                />
+            // Backup locally
+            const existing = JSON.parse(localStorage.getItem('partnershipInquiries') || '[]');
+            existing.push({ ...submissionData, id: Date.now(), submittedAt: new Date().toISOString() });
+            localStorage.setItem('partnershipInquiries', JSON.stringify(existing));
+            
+            setFormData({
+                fullName: '', organization: '', email: '', phone: '',
+                partnershipType: 'Corporate Partnership', budget: '', message: ''
+            });
+        } catch (error) {
+            console.error("Submission error", error);
+            alert("Your inquiry was saved, but we couldn't send it to our team. Please contact us directly.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="font-body antialiased bg-white overflow-x-hidden">
+            <main>
+                {/* Hero Section - Services Matched */}
+                <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-32 bg-white">
+                    <div className="container mx-auto px-6 lg:px-12">
+                        <div className="grid lg:grid-cols-12 gap-12 items-center">
+                            <div className="lg:col-span-7 animate-fade-in-up">
+                                <span className="inline-block text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-6 font-heading">Ecosystem Growth</span>
+                                <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[100px] leading-[1] sm:leading-[0.95] mb-8 tracking-tight sm:tracking-tighter text-text-heading-light font-heading font-bold">
+                                    Partner With Us, <br className="sm:hidden" />
+                                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Shape the Future</span>
+                                </h1>
+                                <p className="text-xl sm:text-2xl text-text-body-light leading-relaxed mb-10 max-w-2xl font-body font-light">
+                                    Building a high-trust ecosystem to empower the next generation. Join us in creating institutional-grade opportunities and driving talent in the AI era.
+                                </p>
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
+                                    <button 
+                                        className="bg-primary text-white font-heading font-bold py-5 px-10 rounded-2xl shadow-xl shadow-purple-500/20 hover:scale-[1.02] transition-all" 
+                                        onClick={onOpenPartnershipModal}
+                                    >
+                                        Become a Partner
+                                    </button>
+                                    <button 
+                                        onClick={() => navigate('/contact')}
+                                        className="border-2 border-slate-200 text-text-heading-light px-10 py-5 rounded-2xl font-heading font-semibold text-lg hover:bg-slate-50 transition-all"
+                                    >
+                                        Get in Touch
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-5 relative hidden lg:block">
+                                <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border-[12px] border-slate-50 shadow-2xl">
+                                    <img alt="Diverse collaboration" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2670&auto=format&fit=crop"/>
+                                </div>
                             </div>
                         </div>
-                        <div className="order-1 lg:order-2 mt-10 lg:mt-0">
-                            <img alt="Diverse group of young professionals collaborating in a bright, modern office" className="rounded-xl shadow-soft w-full h-full object-cover" src="https://images.unsplash.com/photo-1556761175-b413da4b2489?q=80&w=2832&auto=format&fit=crop" />
-                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* Let's Build Together CTA Section */}
-            <section id="contact-cta" className="gradient-bg-section text-white py-20 sm:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                     <div className="max-w-3xl mx-auto text-center">
-                        <h2 className="text-4xl md:text-5xl font-heading font-semibold drop-shadow-sm">Let's Build Together</h2>
-                        <p className="mt-4 text-lg text-white/90 font-body">
-                            Interested in partnering with WeCreate? Get in touch with our partnership team and let's discuss how we can collaborate.
-                        </p>
-                        <div className="mt-8">
-                            <button onClick={onOpenPartnershipModal} className="w-auto bg-white text-primary hover:bg-gray-200 font-heading font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-mild">
-                                Start the Conversation
-                            </button>
+                {/* Ways to Collaborate - Refined Cards */}
+                <section className="py-20 sm:py-32 bg-slate-50 border-y border-slate-100">
+                    <div className="container mx-auto px-6 lg:px-12">
+                        <div className="text-center mb-16 sm:mb-24">
+                            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-4 font-heading">Collaboration Models</span>
+                            <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-text-heading-light leading-tight tracking-tight">How We Partner</h2>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+                            <PartnerModelCard 
+                                icon="business" 
+                                title="Corporate" 
+                                desc="Invest in institutional tech pipelines. Sponsor high-impact programs or host mentorship for our community."
+                                items={["Exclusive talent access", "Brand visibility initiatives", "Curriculum advisement"]}
+                            />
+                            <PartnerModelCard 
+                                icon="school" 
+                                title="Educational" 
+                                desc="Integrate cutting-edge AI education and provide students with vetted real-world pathways."
+                                items={["Co-developed workshops", "Internship credit programs", "Expert guest lectures"]}
+                                iconColor="text-secondary"
+                                iconBg="bg-secondary-light"
+                            />
+                            <PartnerModelCard 
+                                icon="groups" 
+                                title="Community" 
+                                desc="Amplify impact through joint programming to foster a more inclusive and tech-forward ecosystem."
+                                items={["Joint community events", "Shared resource networks", "Cross-promotion support"]}
+                            />
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                {/* Benefits Section - Services Refined Styling */}
+                <section className="py-20 sm:py-32 bg-white">
+                    <div className="container mx-auto px-6 lg:px-12">
+                        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                            <div className="order-2 lg:order-1 relative">
+                                <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-8 border-slate-50 bg-slate-50">
+                                    <img alt="Partnership success" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1556761175-5973eb0732da?q=80&w=2664&auto=format&fit=crop"/>
+                                </div>
+                                <div className="absolute -top-6 -right-6 w-32 h-32 bg-white rounded-full p-4 shadow-2xl hidden xl:flex items-center justify-center text-center">
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Trust <br/> Network</p>
+                                </div>
+                            </div>
+                            <div className="order-1 lg:order-2">
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-text-heading-light mb-12 sm:mb-16 leading-tight">Why Partner With Us?</h2>
+                                <div className="space-y-12">
+                                    <BenefitItem icon="hub" title="Connect with Top Talent" text="Gain direct access to our pool of motivated builders trained in the latest AI technologies and workflow methods." />
+                                    <BenefitItem icon="rocket_launch" title="Increase Brand Reach" text="Showcase your commitment to innovation to our wide, highly engaged audience of emerging leaders." />
+                                    <BenefitItem icon="verified" title="Drive Real Impact" text="Contribute to building a future-ready workforce and fostering regional innovation and economic growth." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Inquiry Form Section */}
+                <section className="py-20 sm:py-32 bg-slate-50 border-t border-slate-100" id="inquiry">
+                    <div className="container mx-auto px-6 lg:px-12">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="grid lg:grid-cols-5 gap-16 lg:gap-20 items-start">
+                                <div className="lg:col-span-2">
+                                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-text-heading-light mb-8 leading-tight">Let's Build Together</h2>
+                                    <p className="text-xl sm:text-2xl text-text-body-light leading-relaxed mb-10 font-body font-light">
+                                        Ready to make a difference? Fill out the inquiry form and our partnership team will reach out to discuss our collaboration roadmap.
+                                    </p>
+                                    <div className="space-y-6">
+                                        <div className="flex items-center gap-4 text-text-body-light">
+                                            <span className="material-symbols-outlined text-primary text-2xl font-bold">mail</span>
+                                            <span className="text-xl font-medium">partners@wecreatehub.com</span>
+                                        </div>
+                                        <div className="flex items-center gap-4 text-text-body-light">
+                                            <span className="material-symbols-outlined text-primary text-2xl font-bold">schedule</span>
+                                            <span className="text-xl font-medium">Response within 24-48 hours</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="lg:col-span-3">
+                                    <div className="bg-white p-8 sm:p-12 rounded-[2.5rem] shadow-2xl border border-slate-100">
+                                        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                            <FormInput label="Full Name" name="fullName" value={formData.fullName} onChange={handleInputChange} placeholder="John Doe" required />
+                                            <FormInput label="Organization" name="organization" value={formData.organization} onChange={handleInputChange} placeholder="Company Name" required />
+                                            <FormInput label="Email Address" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" required type="email" />
+                                            <FormInput label="Phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="(305) 555-0123" type="tel" />
+                                            
+                                            <div className="sm:col-span-1">
+                                                <label className="block text-[11px] font-bold text-neutral-400 uppercase tracking-widest mb-3" htmlFor="partnershipType">Partnership Type</label>
+                                                <select className="w-full bg-slate-50 border-none rounded-xl py-4 px-5 text-text-heading-light text-base focus:ring-2 focus:ring-primary transition outline-none appearance-none" id="partnershipType" name="partnershipType" value={formData.partnershipType} onChange={handleInputChange}>
+                                                    <option>Corporate Partnership</option>
+                                                    <option>Educational Partnership</option>
+                                                    <option>Community Partnership</option>
+                                                    <option>Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div className="sm:col-span-1">
+                                                <label className="block text-[11px] font-bold text-neutral-400 uppercase tracking-widest mb-3" htmlFor="budget">Estimated Budget</label>
+                                                <select className="w-full bg-slate-50 border-none rounded-xl py-4 px-5 text-text-heading-light text-base focus:ring-2 focus:ring-primary transition outline-none appearance-none" id="budget" name="budget" value={formData.budget} onChange={handleInputChange}>
+                                                    <option value="">Select a range</option>
+                                                    <option value="< $5,000">&lt; $5,000</option>
+                                                    <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                                                    <option value="$10,000 - $25,000">$10,000 - $25,000</option>
+                                                    <option value="$25,000+">$25,000+</option>
+                                                    <option value="Not Sure / Other">Not Sure / Other</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="sm:col-span-2">
+                                                <label className="block text-[11px] font-bold text-neutral-400 uppercase tracking-widest mb-3" htmlFor="message">Message</label>
+                                                <textarea className="w-full bg-slate-50 border-none rounded-xl py-4 px-5 text-text-heading-light text-base focus:ring-2 focus:ring-primary transition outline-none" id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us about your goals..." rows={4}></textarea>
+                                            </div>
+
+                                            <div className="sm:col-span-2">
+                                                <button className="bg-primary hover:bg-primary-hover w-full text-white font-heading font-bold py-5 rounded-2xl shadow-xl shadow-purple-500/20 transition-all disabled:opacity-50 text-xl" type="submit" disabled={isSubmitting}>
+                                                    {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
     );
 };
+
+// Internal Helper Components
+const PartnerModelCard: React.FC<{ icon: string; title: string; desc: string; items: string[]; iconColor?: string; iconBg?: string; }> = ({ icon, title, desc, items, iconColor = "text-primary", iconBg = "bg-primary-light" }) => (
+    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-soft transition-all hover:shadow-hover hover:-translate-y-1 group">
+        <div className="mb-8 flex">
+            <span className={`material-symbols-outlined text-3xl ${iconColor} ${iconBg} p-4 rounded-2xl group-hover:scale-110 transition-transform`}>
+                {icon}
+            </span>
+        </div>
+        <h3 className="text-2xl font-heading font-bold mb-4 text-text-heading-light group-hover:text-primary transition-colors">{title}</h3>
+        <p className="font-body font-light text-text-body-light leading-relaxed text-lg mb-8">
+            {desc}
+        </p>
+        <ul className="space-y-4">
+            {items.map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-base font-medium text-text-heading-light">
+                    <span className="material-symbols-outlined text-primary font-bold text-xl">check_circle</span>
+                    {item}
+                </li>
+            ))}
+        </ul>
+    </div>
+);
+
+const BenefitItem: React.FC<{ icon: string; title: string; text: string; }> = ({ icon, title, text }) => (
+    <div className="flex gap-6 sm:gap-8">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 shadow-sm">
+            <span className="material-symbols-outlined text-2xl text-primary font-bold">{icon}</span>
+        </div>
+        <div>
+            <h3 className="text-2xl sm:text-3xl font-heading font-bold mb-3 text-text-heading-light">{title}</h3>
+            <p className="text-text-body-light font-body font-light text-lg sm:text-xl leading-relaxed">{text}</p>
+        </div>
+    </div>
+);
+
+const FormInput: React.FC<{ label: string; name: string; value: string; onChange: (e: any) => void; placeholder: string; required?: boolean; type?: string; }> = ({ label, name, value, onChange, placeholder, required = false, type = "text" }) => (
+    <div className="sm:col-span-1">
+        <label className="block text-[11px] font-bold text-neutral-400 uppercase tracking-widest mb-3" htmlFor={name}>{label}</label>
+        <input className="w-full bg-slate-50 border-none rounded-xl py-4 px-5 text-text-heading-light text-base focus:ring-2 focus:ring-primary transition outline-none" id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} required={required} type={type}/>
+    </div>
+);
 
 export default PartnershipPage;
