@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
                 <div className="mt-20 pt-10 border-t border-border-light dark:border-border-dark text-center text-text-body-light dark:text-text-body-dark text-base font-light">
-                    <p>© {new Date().getFullYear()} WeCreate Studio. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} WeCreate Enterprises LLC. All rights reserved.</p>
                 </div>
             </div>
         </footer>
