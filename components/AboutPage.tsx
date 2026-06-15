@@ -1,11 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LEARNING_URL } from '../config';
+import { BrandLogoItem } from './BrandLogos';
 
 const AboutPage: React.FC = () => {
-  const logos = [
-    'LEADERS', 'GLOBAL LABS', 'INNOVATE CORP', 'VISIONARY GROUP', 'CORE PARTNER', 
-    'ELITE SYSTEMS', 'FUTURE TECH', 'NEXUS AI', 'STRATOS'
+  const partners = [
+    { id: 'aot', name: 'America on Tech' },
+    { id: 'miramar', name: 'City of Miramar' },
+    { id: 'agentcon', name: 'AgentCon' },
+    { id: 'ibm', name: 'IBM' },
+    { id: 'liberty', name: 'Liberty Mutual' },
+    { id: 'hamilton', name: 'Hamilton' },
+    { id: 'nabwic', name: 'NABWIC' },
+    { id: 'code2040', name: 'CODE2040' }
   ];
 
   return (
@@ -104,11 +111,11 @@ const AboutPage: React.FC = () => {
           <h2 className="font-heading text-5xl md:text-[64px] font-bold text-slate-950 mb-4 tracking-tight">Collaborations & Heritage</h2>
           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.4em] mb-12 font-heading">TRUSTED BY LEADERS FROM WORLD-CLASS ORGANIZATIONS.</p>
         </div>
-        <div className="logo-wall-mask relative w-full">
+        <div className="logo-wall-mask relative w-full opacity-65 hover:opacity-100 transition-opacity duration-300">
           <div className="animate-scroll py-8">
-            {[...logos, ...logos].map((logo, i) => (
-              <div key={i} className="mx-12 flex items-center justify-center min-w-[200px]">
-                <span className="text-slate-300 font-bold italic tracking-tighter text-2xl uppercase font-heading">{logo}</span>
+            {[...partners, ...partners, ...partners].map((partner, i) => (
+              <div key={i} className="mx-12 flex items-center justify-center min-w-[220px] group">
+                <BrandLogoItem id={partner.id} />
               </div>
             ))}
           </div>

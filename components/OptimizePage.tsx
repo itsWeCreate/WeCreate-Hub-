@@ -330,6 +330,10 @@ const OptimizePage: React.FC<OptimizePageProps> = ({ onSuccess }) => {
                                     <div className="bg-slate-50 p-10 rounded-3xl text-left border border-slate-100 mb-12">
                                         <h4 className="text-2xl font-bold mb-4">{getDiagnosis().title}</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-light">{getDiagnosis().description}</p>
+                                        <div className="mt-5 pt-5 border-t border-slate-200/60 flex items-center gap-3 text-primary text-sm font-semibold select-none">
+                                            <span className="material-symbols-outlined text-xl">mark_email_read</span>
+                                            <span>A copy of this diagnostic has been emailed to {userData.email}.</span>
+                                        </div>
                                     </div>
                                     <button onClick={() => handleBooking(BOOK_CHECKUP_URL)} className="w-full bg-primary text-white font-bold py-6 rounded-2xl text-2xl shadow-xl">Book Priority Session</button>
                                     <button onClick={resetQuiz} className="mt-8 text-slate-400 font-bold uppercase tracking-widest text-sm hover:text-slate-600 transition-colors">Start Over</button>

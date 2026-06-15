@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
                             </li>
                             <li className="flex items-start">
                                 <span className="material-symbols-outlined text-primary mt-1 text-2xl">mail</span>
-                                <span className="ml-4 text-text-body-light dark:text-text-body-dark font-light">info@wecreatehub.com</span>
+                                <span className="ml-4 text-text-body-light dark:text-text-body-dark font-light">hello@wecreatehub.com</span>
                             </li>
                         </ul>
                     </div>
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
                 <div className="mt-20 pt-10 border-t border-border-light dark:border-border-dark text-center text-text-body-light dark:text-text-body-dark text-base font-light">
-                    <p>© {new Date().getFullYear()} WeCreate Enterprises LLC. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} WeCreate Studio. All rights reserved.</p>
                 </div>
             </div>
         </footer>

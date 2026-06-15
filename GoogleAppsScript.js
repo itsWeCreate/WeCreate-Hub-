@@ -71,6 +71,38 @@ function doPost(e) {
     } else if (data.formType === 'leadCapture' || data.formType === 'quizSubmission' || data.formType === 'generalInquiry') {
       sheet = ss.getSheetByName(LEADS_SHEET_NAME);
       rowData = [timestamp, data.formType, data.fullName, data.email, data.message || '', data.partnershipType || ''];
+      
+      // Auto-email user their result if formType is quizSubmission
+      if (data.formType === 'quizSubmission' && data.email) {
+        try {
+          const personName = data.fullName || 'Innovator';
+          const emailSubject = "Your WeCreate AI Snapshot Results";
+          
+          let emailBody = "Hi " + personName + ",\n\n";
+          emailBody += "Thank you for completing the WeCreate AI Snapshot! Here is your custom operational diagnosis and full transcript:\n\n";
+          emailBody += "--------------------------------------------------\n";
+          emailBody += data.message + "\n";
+          emailBody += "--------------------------------------------------\n\n";
+          emailBody += "What's Next?\n";
+          emailBody += "- Focus on removing your primary process bottleneck to free up time to grow your business.\n";
+          emailBody += "- If you want a comprehensive look under the hood, consider booking our 1-on-1 AI Checkup session or structured Process Analysis.\n\n";
+          emailBody += "Book an AI Checkup: https://wecreatehub.com/optimize \n\n";
+          emailBody += "We're excited to see what you build!\n\n";
+          emailBody += "Best regards,\n";
+          emailBody += "The WeCreate Team\n";
+          emailBody += "itswecreate@gmail.com";
+
+          MailApp.sendEmail({
+            to: data.email,
+            subject: emailSubject,
+            body: emailBody,
+            replyTo: "itswecreate@gmail.com"
+          });
+        } catch (mailError) {
+          // Log the error but don't break the sheet entry
+          Logger.log("Email error: " + mailError.toString());
+        }
+      }
     }
 
     if (sheet) {
