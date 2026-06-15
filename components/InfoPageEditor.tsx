@@ -48,6 +48,7 @@ const InfoPageEditor: React.FC = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({ action: 'saveConfig', config: config }),
+                redirect: 'follow'
             });
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
             const text = await response.text();

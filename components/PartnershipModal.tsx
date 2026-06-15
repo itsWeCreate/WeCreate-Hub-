@@ -68,6 +68,7 @@ const PartnershipModal: React.FC<PartnershipModalProps> = ({ isOpen, onClose, on
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(submissionData),
+                    redirect: 'follow'
                 });
                 
                 const result = await response.json();

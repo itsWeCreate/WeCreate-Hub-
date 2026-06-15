@@ -69,17 +69,29 @@ const OptimizePage: React.FC<OptimizePageProps> = ({ onSuccess }) => {
         };
 
         try {
-            if (GOOGLE_SHEET_WEB_APP_URL) {
-                await fetch(GOOGLE_SHEET_WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(submissionData),
-                });
+            if (!GOOGLE_SHEET_WEB_APP_URL) {
+                console.error('[WeCreate Quiz] ERROR: GOOGLE_SHEET_WEB_APP_URL is not set in config.ts');
+                setQuizStep(7);
+                return;
             }
-            if (onSuccess) onSuccess("Your AI Snapshot has been submitted successfully!");
-            setQuizStep(7); 
+
+            console.log('[WeCreate Quiz] Sending POST...', { name: userData.name, email: userData.email });
+            const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(submissionData),
+                redirect: 'follow',
+            });
+
+            const responseText = await response.text();
+            console.log('[WeCreate Quiz] Response:', response.status, responseText);
+
+            if (onSuccess) onSuccess('Your AI Snapshot has been submitted successfully!');
+            setQuizStep(7);
+
         } catch (error) {
-            setQuizStep(7); 
+            console.error('[WeCreate Quiz] FETCH FAILED:', error);
+            setQuizStep(7);
         } finally {
             setIsSubmitting(false);
         }
